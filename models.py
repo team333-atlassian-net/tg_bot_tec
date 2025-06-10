@@ -1,8 +1,9 @@
-from sqlalchemy import Column, BigInteger, String, Boolean
+from sqlalchemy import Column, BigInteger, String, Boolean, Integer, Text, TIMESTAMP, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
-
+from config import settings
+from sqlalchemy.ext.asyncio import create_async_engine
 Base = declarative_base()
 
 class User(Base):
@@ -16,5 +17,58 @@ class User(Base):
     pin_code = Column(String, unique=True, nullable=False)
     admin_rule = Column(Boolean, nullable=False, default=False)
 
-    def __repr__(self):
-        return f"<User(full_name='{self.first_name} {self.last_name} {self.middle_name}', telegram_id={self.tg_id}, admin_rule={self.admin_rule})>"
+class CompanyInfo(Base):
+    __tablename__ = 'company_info'
+
+    id = Column(Integer, primary_key=True)
+    title = Column(Text, nullable=False)
+    content = Column(Text)
+    file_path = Column(Text)
+    image_path = Column(Text)
+    created_by = Column(Integer, ForeignKey('users.id'))
+    created_at = Column(TIMESTAMP)
+
+
+class FAQ(Base):
+    __tablename__ = 'faq'
+
+    id = Column(Integer, primary_key=True)
+    question = Column(Text)
+    answer = Column(Text)
+    category = Column(Text)
+    created_by = Column(Integer, ForeignKey('users.id'))
+
+
+class DocumentInstruction(Base):
+    __tablename__ = 'document_instructions'
+
+    id = Column(Integer, primary_key=True)
+    title = Column(Text)
+    instructions = Column(Text)
+    file_path = Column(Text)
+
+
+class Feedback(Base):
+    __tablename__ = 'feedback'
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    text = Column(Text)
+    is_anonymous = Column(Boolean)
+    created_at = Column(TIMESTAMP)
+
+
+class CanteenInfo(Base):
+    """Модель столовой"""
+    __tablename__ = 'canteen_info'
+
+    id = Column(Integer, primary_key=True)
+    work_schedule = Column(Text)
+    menu_text = Column(Text)
+    file_path = Column(Text)  # PDF или изображение
+    image_path = Column(Text)
+    created_by = Column(Integer, ForeignKey('users.id'))
+    created_at = Column(TIMESTAMP)
+
+engine = create_async_engine(settings.DATABASE_URL)  # движок
+   
