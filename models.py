@@ -1,10 +1,7 @@
-from sqlalchemy import Column, BigInteger, String, Boolean, Integer, Text, TIMESTAMP, ForeignKey
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.dialects.postgresql import UUID
 import uuid
-from config import settings
-from sqlalchemy.ext.asyncio import create_async_engine
-Base = declarative_base()
+from db import Base
+from sqlalchemy import Column, BigInteger, String, Boolean, Integer, Text, TIMESTAMP, ForeignKey
+from sqlalchemy.dialects.postgresql import UUID
 
 class User(Base):
     __tablename__ = "users"
@@ -67,8 +64,5 @@ class CanteenInfo(Base):
     menu_text = Column(Text)
     file_path = Column(Text)  # PDF или изображение
     image_path = Column(Text)
-    created_by = Column(Integer, ForeignKey('users.id'))
+    created_by = Column(UUID, ForeignKey('users.id'))
     created_at = Column(TIMESTAMP)
-
-engine = create_async_engine(settings.DATABASE_URL)  # движок
-   
