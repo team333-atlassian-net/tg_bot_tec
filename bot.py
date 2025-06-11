@@ -6,8 +6,7 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.filters import Command
 from config import settings
-from handlers.canteen_handlers import register_handlers_canteen
-
+from handlers import canteen
 
 API_TOKEN = settings.API_TOKEN
 
@@ -25,12 +24,10 @@ router = Router()
 async def start_handler(message: Message):
     await message.answer("Привет! Это бот по онбордингу сотрудников компании")
 
-# Регистрация обработчиков
-register_handlers_canteen(dp)
 
 # Регистрируем роутер в диспетчере
 dp.include_router(router)
-
+dp.include_router(canteen.router)
 
 async def main():
     await dp.start_polling(bot)
