@@ -1,3 +1,4 @@
+"""Хэндлеры для работы с пользователями"""
 from sqlalchemy.future import select
 from models import User
 from db import async_session_maker
@@ -50,3 +51,9 @@ async def add_user_with_excel(df):
             added += 1
         await session.commit()
     return added
+
+
+async def is_admin(tg_id: int) -> bool:
+    """Функция, проверяющая, что роль - админ"""
+    user = await get_user(tg_id=tg_id, admin_rule=True)
+    return user is not None
