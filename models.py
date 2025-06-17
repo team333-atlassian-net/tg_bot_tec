@@ -4,6 +4,7 @@ from sqlalchemy import Column, BigInteger, String, Boolean, Integer, Text, TIMES
 from sqlalchemy.dialects.postgresql import UUID
 
 class User(Base):
+    """Пользователи"""
     __tablename__ = "users"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4) 
@@ -15,6 +16,7 @@ class User(Base):
     admin_rule = Column(Boolean, nullable=False, default=False)
 
 class CompanyInfo(Base):
+    """Информация о компании"""
     __tablename__ = 'company_info'
 
     id = Column(Integer, primary_key=True)
@@ -27,6 +29,7 @@ class CompanyInfo(Base):
 
 
 class FAQ(Base):
+    """Вопросы и ответы"""
     __tablename__ = 'faq'
 
     id = Column(Integer, primary_key=True)
@@ -37,6 +40,7 @@ class FAQ(Base):
 
 
 class DocumentInstruction(Base):
+    """Инструкции"""
     __tablename__ = 'document_instructions'
 
     id = Column(Integer, primary_key=True)
@@ -46,6 +50,7 @@ class DocumentInstruction(Base):
 
 
 class Feedback(Base):
+    """Отзывы о боте"""
     __tablename__ = 'feedback'
 
     id = Column(Integer, primary_key=True)
