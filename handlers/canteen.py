@@ -7,9 +7,10 @@ router = Router()
 
 @router.message(F.text.lower() == "столовая")
 async def canteen_info_handler(message: Message):
+    """Хэндлер на получение информации о столовой"""
+    # проверка, что пользователь авторизован
     tg_id = message.from_user.id
     user = await get_user(tg_id=tg_id)
-
     if not user:
         await message.answer("Вы не авторизованы. Введите пин-код с помощью /login.")
         return
