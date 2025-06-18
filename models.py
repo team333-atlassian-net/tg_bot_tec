@@ -1,7 +1,8 @@
 import uuid
 from db import Base
-from sqlalchemy import Column, BigInteger, String, Boolean, Integer, Text, TIMESTAMP, ForeignKey
+from sqlalchemy import Column, BigInteger, String, Boolean, Integer, Text, TIMESTAMP, ForeignKey, DateTime
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.sql import func
 
 class User(Base):
     """Пользователи"""
@@ -24,7 +25,7 @@ class CompanyInfo(Base):
     content = Column(Text)
     file_path = Column(Text)
     image_path = Column(Text)
-    created_by = Column(Integer, ForeignKey('users.id'))
+    created_by = Column(UUID, ForeignKey('users.id'))
     created_at = Column(TIMESTAMP)
 
 
@@ -36,7 +37,7 @@ class FAQ(Base):
     question = Column(Text)
     answer = Column(Text)
     category = Column(Text)
-    created_by = Column(Integer, ForeignKey('users.id'))
+    created_by = Column(UUID, ForeignKey('users.id'))
 
 
 class DocumentInstruction(Base):
@@ -54,7 +55,7 @@ class Feedback(Base):
     __tablename__ = 'feedback'
 
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.id'))
+    user_id = Column(UUID, ForeignKey('users.id'))
     text = Column(Text)
     is_anonymous = Column(Boolean)
     created_at = Column(TIMESTAMP)
@@ -70,4 +71,16 @@ class CanteenInfo(Base):
     file_path = Column(Text)  # PDF или изображение
     image_path = Column(Text)
     created_by = Column(UUID, ForeignKey('users.id'))
+    created_at = Column(TIMESTAMP)
+
+
+class RegistrationRequest(Base):
+    __tablename__ = "registration_requests"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tg_id = Column(String, nullable=False)
+    first_name = Column(String, nullable=False)
+    last_name = Column(String, nullable=False)
+    middle_name = Column(String, nullable=False)
+    status = Column(String, default="pending")  # pending, approved, rejected
     created_at = Column(TIMESTAMP)
