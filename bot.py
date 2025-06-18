@@ -33,7 +33,7 @@ async def help_handler(message: Message):
     user = await get_user(tg_id=tg_id)
 
     if not user: # проверка что пользователь авторизован
-        await message.answer("Вы не авторизованы. Введите пин-код с помощью /login.")
+        await message.answer("Вы не авторизованы. Введите пин-код с помощью /login.\n Для регистрации введите /register")
         return
     
     if user.admin_rule: # команды для админа
@@ -42,7 +42,7 @@ async def help_handler(message: Message):
             "/start — Начать взаимодействие с ботом\n"
             "/login — Авторизация по ПИН-коду\n"
             "/help — Показать это справочное сообщение\n"
-            "/add_user - Добавить пользователя(ей) в систему вручную или с помощью файла excel"
+            "/add_user - Добавить пользователя(ей) в систему вручную или с помощью файла excel\n"
             "столовая — Информация о работе столовой\n"
         )
     else: # команды для обычного пользователя
