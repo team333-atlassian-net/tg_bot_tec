@@ -10,7 +10,7 @@ async def add_canteen_info():
                         first_name =  "Admin",
                         last_name = "Admin",
                         middle_name = "Admin",
-                        pin_code = "1234qwe",
+                        pin_code = "11111",
                         admin_rule = True
         )
         session.add(new_info)

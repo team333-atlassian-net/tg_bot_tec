@@ -7,9 +7,9 @@ from aiogram.fsm.state import State, StatesGroup
 from dao.auth import add_user, add_user_with_excel, get_user, is_admin
 from aiogram.filters import Command
 from models import User
+from utils import generate_unique_pin
 
 router = Router()
-
 
 class AddUserStates(StatesGroup):
     """Класс состояний для добавления нового пользователя в систему (администратором)"""
@@ -18,6 +18,7 @@ class AddUserStates(StatesGroup):
     last_name = State()
     middle_name = State()
     pin_code = State()
+
 
 @router.message(Command("add_user"))
 async def start_add_user(message: Message, state: FSMContext):
@@ -51,18 +52,9 @@ async def get_last_name(message: Message, state: FSMContext):
 @router.message(AddUserStates.middle_name)
 async def get_middle_name(message: Message, state: FSMContext):
     await state.update_data(middle_name=message.text.strip())
-    await message.answer("Введите ПИН-код:")
-    await state.set_state(AddUserStates.pin_code)
-
-@router.message(AddUserStates.pin_code)
-async def get_pin_code(message: Message, state: FSMContext):
-    pin_code = message.text.strip()
+    
     data = await state.get_data()
-
-    user = await get_user(pin_code=pin_code)
-    if user:
-        await message.answer("❌ Пользователь с таким  ПИН-кодом уже существует. Попробуйте другой.")
-        return
+    pin_code = await generate_unique_pin()
 
     user = User(
         first_name=data["first_name"],
@@ -72,14 +64,15 @@ async def get_pin_code(message: Message, state: FSMContext):
         tg_id=None
     )
     await add_user(user)
-    await message.answer("✅ Пользователь добавлен.")
+
+    await message.answer(f"✅ Пользователь добавлен.\n📌 PIN-код: <b>{pin_code}</b>", parse_mode="HTML")
     await state.clear()
 
 #####################################################################
 # Функция для добавления пользователей через excel
 @router.message(AddUserStates.choosing_method, F.text.lower() == "excel")
 async def excel_entry_start(message: Message):
-    await message.answer("Пришлите Excel-файл (.xlsx) с колонками: first_name, last_name, middle_name, pin_code")
+    await message.answer("Пришлите Excel-файл (.xlsx) с колонками: first_name, last_name, middle_name")
 
 @router.message(F.document)
 async def handle_excel(message: Message):
@@ -95,9 +88,9 @@ async def handle_excel(message: Message):
     file_bytes = await message.bot.download(file)
     df = pd.read_excel(io.BytesIO(file_bytes.read()))
 
-    required_columns = {"first_name", "last_name", "middle_name", "pin_code"}
+    required_columns = {"first_name", "last_name", "middle_name"}
     if not required_columns.issubset(df.columns):
-        await message.answer("❌ В Excel-файле должны быть колонки: first_name, last_name, middle_name, pin_code")
+        await message.answer("❌ В Excel-файле должны быть колонки: first_name, last_name, middle_name")
         return
 
     added = await add_user_with_excel(df)

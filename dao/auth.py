@@ -2,12 +2,13 @@
 from sqlalchemy.future import select
 from models import User, RegistrationRequest
 from db import async_session_maker
+from utils import generate_unique_pin
 
 async def get_user(**filters):
     """Функция для поиска пользователя по заданным критериям
 
     - Пример:
-        user = await get_user(pin_code="1234qwe")
+        user = await get_user(pin_code="12341")
         user = await get_user(tg_id="1111111")
     """
     async with async_session_maker() as session:
@@ -50,14 +51,12 @@ async def add_user_with_excel(df):
     added = 0
     async with async_session_maker() as session:
         for _, row in df.iterrows():
-            exists = await session.execute(select(User).where(User.pin_code == str(row["pin_code"])))
-            if exists.scalar_one_or_none():
-                continue  # пропустить дубли
+            pin = await generate_unique_pin()
             user = User(
                 first_name=row["first_name"],
                 last_name=row["last_name"],
                 middle_name=row["middle_name"],
-                pin_code=str(row["pin_code"]),
+                pin_code=pin,
                 tg_id=None
             )
             session.add(user)

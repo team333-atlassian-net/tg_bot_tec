@@ -6,7 +6,7 @@ from aiogram import Bot, Router, F
 from dao.auth import add_user, create_registration_request, get_request, get_user, get_users, update_or_add_tg_id, update_request_status
 from aiogram.filters import Command
 from models import User
-from utils import generate_pin
+from utils import generate_unique_pin
 
 
 router = Router()
@@ -105,7 +105,7 @@ async def reg_middle_name(message: Message, state: FSMContext):
 async def approve_request(callback: CallbackQuery):
     request_id = callback.data.split(":")[1]
     request = await get_request(id=request_id)
-    pin = generate_pin()
+    pin = await generate_unique_pin()
 
     await update_request_status(request_id=request_id, status="approved")
     user = User(
