@@ -74,11 +74,9 @@ def upgrade() -> None:
     )
     op.create_table('faq',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('question', sa.Text(), nullable=True),
-    sa.Column('answer', sa.Text(), nullable=True),
+    sa.Column('question', sa.Text(), nullable=False),
+    sa.Column('answer', sa.Text(), nullable=False),
     sa.Column('category', sa.Text(), nullable=True),
-    sa.Column('created_by', sa.UUID(), nullable=True),
-    sa.ForeignKeyConstraint(['created_by'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('feedback',

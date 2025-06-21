@@ -34,10 +34,9 @@ class FAQ(Base):
     __tablename__ = 'faq'
 
     id = Column(Integer, primary_key=True)
-    question = Column(Text)
-    answer = Column(Text)
-    category = Column(Text)
-    created_by = Column(UUID, ForeignKey('users.id'))
+    question = Column(Text, nullable=False)
+    answer = Column(Text, nullable=False)
+    category = Column(Text, nullable=True)
 
 
 class DocumentInstruction(Base):
