@@ -45,7 +45,7 @@ async def add_faq_with_excel(df):
     added = 0
     async with async_session_maker() as session:
         for _, row in df.iterrows():
-            category = row.get("category", None)
+            category = row["category"]
             if category == "-":
                 category = None
             faq = FAQ(
