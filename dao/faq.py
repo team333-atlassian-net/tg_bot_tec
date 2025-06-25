@@ -1,3 +1,4 @@
+import pandas as pd
 from models import FAQ
 from sqlalchemy import or_, select
 from db import async_session_maker
@@ -38,3 +39,21 @@ async def find_categories():
         result = await session.execute(select(FAQ.category).distinct())
         categories_raw = result.scalars().all()
         return categories_raw
+    
+
+async def add_faq_with_excel(df):
+    added = 0
+    async with async_session_maker() as session:
+        for _, row in df.iterrows():
+            category = row.get("category", None)
+            if category == "-":
+                category = None
+            faq = FAQ(
+                question=row["question"],
+                answer=row["answer"],
+                category=category,
+            )
+            session.add(faq)
+            added += 1
+        await session.commit()
+    return added

@@ -8,6 +8,7 @@ from aiogram.filters import Command
 from config import settings
 from dao.auth import get_user
 from handlers import canteen, auth, users, faq
+from utils.auth import require_auth
 
 API_TOKEN = settings.API_TOKEN
 
@@ -28,13 +29,8 @@ async def start_handler(message: Message):
 @router.message(Command("help"))
 async def help_handler(message: Message):
     """Хэндлер со справочной информацией"""
-
-    tg_id = message.from_user.id
-    user = await get_user(tg_id=tg_id)
-
-    if not user: # проверка что пользователь авторизован
-        await message.answer("Вы не авторизованы. Введите пин-код с помощью /login.\nДля регистрации введите /register")
-        return
+    
+    user = await require_auth(message) # проверка что пользователь авторизован
     
     if user.admin_rule: # команды для админа
         help_text = (

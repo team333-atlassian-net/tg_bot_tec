@@ -1,8 +1,7 @@
 import random
+from sqlalchemy import select
 from db import async_session_maker
 from models import User
-from sqlalchemy import select
-
 async def generate_unique_pin():
     async with async_session_maker() as session:
         while True:

@@ -2,7 +2,7 @@
 from sqlalchemy.future import select
 from models import User, RegistrationRequest
 from db import async_session_maker
-from utils import generate_unique_pin
+from utils.generate_pin import generate_unique_pin
 
 async def get_user(**filters):
     """Функция для поиска пользователя по заданным критериям

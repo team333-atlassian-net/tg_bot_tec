@@ -67,9 +67,7 @@ def upgrade() -> None:
     sa.Column('content', sa.Text(), nullable=True),
     sa.Column('file_path', sa.Text(), nullable=True),
     sa.Column('image_path', sa.Text(), nullable=True),
-    sa.Column('created_by', sa.UUID(), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(), nullable=True),
-    sa.ForeignKeyConstraint(['created_by'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('faq',

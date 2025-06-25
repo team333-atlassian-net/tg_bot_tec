@@ -25,7 +25,6 @@ class CompanyInfo(Base):
     content = Column(Text)
     file_path = Column(Text)
     image_path = Column(Text)
-    created_by = Column(UUID, ForeignKey('users.id'))
     created_at = Column(TIMESTAMP)
 
 

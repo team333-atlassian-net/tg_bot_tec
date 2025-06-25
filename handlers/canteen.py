@@ -2,6 +2,7 @@ from aiogram import Router, F
 from aiogram.types import Message, InputFile
 from dao.auth import get_user
 from dao.canteen import get_latest_canteen_info
+from utils.auth import require_auth
 
 router = Router()
 
@@ -9,11 +10,7 @@ router = Router()
 async def canteen_info_handler(message: Message):
     """Хэндлер на получение информации о столовой"""
     # проверка, что пользователь авторизован
-    tg_id = message.from_user.id
-    user = await get_user(tg_id=tg_id)
-    if not user:
-        await message.answer("Вы не авторизованы. Введите пин-код с помощью /login.")
-        return
+    await require_auth(message)
     
     canteen_info = await get_latest_canteen_info()
 

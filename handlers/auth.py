@@ -6,7 +6,8 @@ from aiogram import Bot, Router, F
 from dao.auth import add_user, create_registration_request, get_request, get_user, get_users, update_or_add_tg_id, update_request_status
 from aiogram.filters import Command
 from models import User
-from utils import generate_unique_pin
+from utils.auth import require_admin
+from utils.generate_pin import generate_unique_pin
 
 
 router = Router()
@@ -33,6 +34,7 @@ async def start_handler(message: Message, state: FSMContext):
 @router.message(AuthStates.awaiting_pin)
 async def handle_pin(message: Message, state: FSMContext):
     """Ввод пин кода и проверка, что такой юзер есть в системе"""
+
     pin = message.text.strip()
     tg_id = message.from_user.id
 
@@ -103,6 +105,9 @@ async def reg_middle_name(message: Message, state: FSMContext):
 
 @router.callback_query(F.data.startswith("approve:"))
 async def approve_request(callback: CallbackQuery):
+
+    user = await require_admin(callback.message)  # проверка авторизации
+    
     request_id = callback.data.split(":")[1]
     request = await get_request(id=request_id)
     pin = await generate_unique_pin()
