@@ -6,8 +6,7 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.filters import Command
 from config import settings
-from dao.auth import get_user
-from handlers import canteen, auth, users, faq
+from handlers import users
 from utils.auth import require_auth
 
 API_TOKEN = settings.API_TOKEN
@@ -36,15 +35,11 @@ async def help_handler(message: Message):
         help_text = (
             "📌 <b>Доступные команды для администратора:</b>\n\n"
             "/add_user - Добавить пользователя(ей) в систему вручную или с помощью файла Excel\n"
-            "добавить faq - Добавить вопрос и ответ в базу\n"
             "📌 <b>Общедоступные команды:</b>\n\n"
             "/start — Начать взаимодействие с ботом\n"
             "/login — Авторизация по ПИН-коду\n"
             "/register - Регистрация в системе\n"
             "/help — Показать это справочное сообщение\n"
-            "/faq - Просмотр категорий часто задаваемых вопросов и ответов\n"
-            "faq Ваш вопрос - Поиск конкретного вопроса\n"
-            "столовая — Информация о работе столовой\n"
         )
     else: # команды для обычного пользователя
         help_text = (
@@ -53,18 +48,12 @@ async def help_handler(message: Message):
             "/login — Авторизация по ПИН-коду\n"
             "/register - Регистрация в системе\n"
             "/help — Показать это справочное сообщение\n"
-            "/faq - Просмотр категорий часто задаваемых вопросов и ответов\n"
-            "faq Ваш вопрос - Поиск конкретного вопроса\n"
-            "столовая — Информация о работе столовой\n"
         )
     await message.answer(help_text)
 
 
 dp.include_router(router)
-dp.include_router(canteen.router)
-dp.include_router(auth.router)
 dp.include_router(users.router)
-dp.include_router(faq.router)
 
 async def main():
     await dp.start_polling(bot)
