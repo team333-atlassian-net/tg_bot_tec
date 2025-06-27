@@ -1,31 +1,36 @@
-import asyncio
-from aiogram import Bot, Dispatcher, Router
+from aiogram import Bot, Dispatcher
+from aiogram.fsm.storage.memory import MemoryStorage
+from aiogram import Bot, Dispatcher
 from aiogram.types import Message
-from aiogram.enums import ParseMode
-from aiogram.client.default import DefaultBotProperties
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.filters import Command
+from aiogram.enums.parse_mode import ParseMode
+from aiogram.client.bot import DefaultBotProperties
+
 from config import settings
-from handlers import users
 from utils.auth import require_auth
+from dialogs import register_all_dialogs
+from handlers.login import router as login_router
+from handlers.register import router as register_router
+from handlers.request_register_callbacks import router as register_request_router
+from handlers.add_user import router as add_users_router
 
-API_TOKEN = settings.API_TOKEN
-
-# Создаём основные объекты
-bot = Bot(
-    token=API_TOKEN,
-    default=DefaultBotProperties(parse_mode=ParseMode.HTML)
-)
+bot = Bot(token=settings.API_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 dp = Dispatcher(storage=MemoryStorage())
 
-router = Router()
+register_all_dialogs(dp)
 
-@router.message(Command('start'))
+dp.include_router(login_router)
+dp.include_router(register_router)
+dp.include_router(register_request_router)
+dp.include_router(add_users_router)
+
+@dp.message(Command('start'))
 async def start_handler(message: Message):
     """Стартовый хэндлер"""
     await message.answer("Привет! Это бот для онбординга сотрудников компании ТЭК.\nЧтобы увидеть все команды, введите /help")
 
-@router.message(Command("help"))
+@dp.message(Command("help"))
 async def help_handler(message: Message):
     """Хэндлер со справочной информацией"""
     
@@ -51,12 +56,9 @@ async def help_handler(message: Message):
         )
     await message.answer(help_text)
 
-
-dp.include_router(router)
-dp.include_router(users.router)
-
 async def main():
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
+    import asyncio
     asyncio.run(main())

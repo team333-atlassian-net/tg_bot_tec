@@ -1,4 +1,3 @@
-"""Хэндлеры для работы с пользователями"""
 from sqlalchemy.future import select
 from models import User, RegistrationRequest
 from db import async_session_maker
@@ -66,13 +65,13 @@ async def add_user_with_excel(df):
 
 
 async def is_admin(tg_id: int) -> bool:
-    """Функция, проверяющая, что роль - админ"""
+    """Проверяет, что роль - админ"""
     user = await get_user(tg_id=tg_id, admin_rule=True)
     return user is not None
 
 
-
 async def create_registration_request(tg_id: str, first_name: str, last_name: str, middle_name: str):
+    """Создание заявки на регистрацию"""
     async with async_session_maker() as session:
         request = RegistrationRequest(
             tg_id=tg_id,
@@ -86,6 +85,7 @@ async def create_registration_request(tg_id: str, first_name: str, last_name: st
     
 
 async def get_request(**filters):
+    """Получение заявки"""
     async with async_session_maker() as session:
         query = select(RegistrationRequest)
         if filters:
@@ -94,6 +94,7 @@ async def get_request(**filters):
         return result.scalar_one_or_none()
 
 async def get_pending_requests():
+    """Получение всех отправленных заявок"""
     async with async_session_maker() as session:
         result = await session.execute(
             select(RegistrationRequest).where(RegistrationRequest.status == "pending")
@@ -101,6 +102,7 @@ async def get_pending_requests():
         return result.scalars().all()
 
 async def update_request_status(request_id, status):
+    """Обновление статуса заявки"""
     async with async_session_maker() as session:
         result = await session.execute(select(RegistrationRequest).where(RegistrationRequest.id == request_id))
         req = result.scalar_one_or_none()

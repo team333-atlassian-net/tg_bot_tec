@@ -6,7 +6,7 @@ from models import User
 async def add_canteen_info():
     async with async_session_maker() as session:
         new_info = User(
-                        tg_id = 111,
+                        tg_id = None,
                         first_name =  "Admin",
                         last_name = "Admin",
                         middle_name = "Admin",
