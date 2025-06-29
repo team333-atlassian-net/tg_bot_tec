@@ -7,7 +7,7 @@ async def require_auth(message: Message):
 
     if not user:
         await message.answer("Вы не авторизованы. Введите пин-код с помощью /login.\nДля регистрации введите /register")
-        return
+        return None
 
     return user
 
@@ -18,10 +18,10 @@ async def require_admin(message: Message):
 
     if not user:
         await message.answer("❌ Вы не авторизованы. Введите пин-код с помощью /login.\nДля регистрации введите /register")
-        return
+        return None
     
     if not await is_admin(message.from_user.id):
         await message.answer("❌ У вас нет прав администратора.")
-        return
+        return None
     
     return user

@@ -32,6 +32,11 @@ async def get_users(**filters):
         return result.scalars().all()
     
 
+async def get_all_active_users():
+    async with async_session_maker() as session:
+        result = await session.execute(select(User).where(User.tg_id != None))
+        return result.scalars().all()
+    
 async def update_or_add_tg_id(user, tg_id):
     """Функция для обновления или добавления tg_id для пользователя"""
     async with async_session_maker() as session:

@@ -38,16 +38,6 @@ class FAQ(Base):
     category = Column(Text, nullable=True)
 
 
-class DocumentInstruction(Base):
-    """Инструкции"""
-    __tablename__ = 'document_instructions'
-
-    id = Column(Integer, primary_key=True)
-    title = Column(Text)
-    instructions = Column(Text)
-    file_path = Column(Text)
-
-
 class Feedback(Base):
     """Отзывы о боте"""
     __tablename__ = 'feedback'
@@ -82,3 +72,11 @@ class RegistrationRequest(Base):
     middle_name = Column(String, nullable=False)
     status = Column(String, default="pending")  # pending, approved, rejected
     created_at = Column(TIMESTAMP)
+
+
+class Event(Base):
+    __tablename__ = "events"
+
+    id = Column(Integer, primary_key=True)
+    title = Column(String, nullable=False)
+    description = Column(String)

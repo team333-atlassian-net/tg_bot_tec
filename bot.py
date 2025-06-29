@@ -14,6 +14,7 @@ from handlers.login import router as login_router
 from handlers.register import router as register_router
 from handlers.request_register_callbacks import router as register_request_router
 from handlers.add_user import router as add_users_router
+from handlers.events import router as events_router
 
 bot = Bot(token=settings.API_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 dp = Dispatcher(storage=MemoryStorage())
@@ -24,6 +25,7 @@ dp.include_router(login_router)
 dp.include_router(register_router)
 dp.include_router(register_request_router)
 dp.include_router(add_users_router)
+dp.include_router(events_router)
 
 @dp.message(Command('start'))
 async def start_handler(message: Message):
@@ -35,11 +37,14 @@ async def help_handler(message: Message):
     """Хэндлер со справочной информацией"""
     
     user = await require_auth(message) # проверка что пользователь авторизован
+    if not user:
+        return
     
     if user.admin_rule: # команды для админа
         help_text = (
             "📌 <b>Доступные команды для администратора:</b>\n\n"
             "/add_user - Добавить пользователя(ей) в систему вручную или с помощью файла Excel\n"
+            "/add_event - Добавить и разослать информацию о новом корпоротивном мероприятии\n"
             "📌 <b>Общедоступные команды:</b>\n\n"
             "/start — Начать взаимодействие с ботом\n"
             "/login — Авторизация по ПИН-коду\n"
@@ -52,6 +57,7 @@ async def help_handler(message: Message):
             "/start — Начать взаимодействие с ботом\n"
             "/login — Авторизация по ПИН-коду\n"
             "/register - Регистрация в системе\n"
+            "/events - Показать список всех корпоративных мероприятий\n"
             "/help — Показать это справочное сообщение\n"
         )
     await message.answer(help_text)

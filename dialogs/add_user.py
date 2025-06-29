@@ -29,7 +29,9 @@ async def on_excel_chosen(callback, button, manager: DialogManager):
 
 async def on_excel_uploaded(message: Message, widget: MessageInput, dialog_manager: DialogManager):
     """Обработка Excel-файла для добавления пользователей"""
-    await require_admin(message)
+    user = await require_admin(message)
+    if not user:
+        return
 
     file = message.document
     if not file.file_name.endswith(".xlsx"):
@@ -74,7 +76,7 @@ async def on_middle_entered(message: Message,
     Регистраирует пользователя"""
     data = dialog_manager.dialog_data
     middle_name = value.get_value()
-    pin = await generate_unique_pin(),
+    pin = await generate_unique_pin()
 
     user = User(first_name=data["first_name"],
                 last_name=data["last_name"],
