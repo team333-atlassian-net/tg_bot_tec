@@ -1,6 +1,5 @@
 from aiogram_dialog import Dialog, Window, DialogManager
-from aiogram_dialog.widgets.text import Format, Const
-from aiogram_dialog.widgets.kbd import Back
+from aiogram_dialog.widgets.text import Format
 from aiogram.fsm.state import State, StatesGroup
 from dao.events import get_all_events
 

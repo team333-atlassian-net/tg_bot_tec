@@ -12,4 +12,5 @@ async def start_auth_dialog(message: Message, dialog_manager: DialogManager):
     user = await require_admin(message)
     if not user:
         return
+    await dialog_manager.reset_stack()
     await dialog_manager.start(AddUserSG.method, mode=StartMode.RESET_STACK)

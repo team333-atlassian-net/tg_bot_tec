@@ -9,4 +9,5 @@ router = Router()
 
 @router.message(Command("register"))
 async def start_auth_dialog(message: Message, dialog_manager: DialogManager):
+    await dialog_manager.reset_stack()
     await dialog_manager.start(RegisterDialogSG.first, mode=StartMode.RESET_STACK)
