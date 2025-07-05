@@ -6,6 +6,10 @@ from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.filters import Command
 from aiogram.enums.parse_mode import ParseMode
 from aiogram.client.bot import DefaultBotProperties
+from aiogram import Bot, Dispatcher
+from aiogram.fsm.storage.memory import MemoryStorage
+from aiogram_dialog import DialogManager, setup_dialogs
+
 
 from config import settings
 from utils.auth import require_auth
@@ -18,6 +22,8 @@ from handlers.events import router as events_router
 
 bot = Bot(token=settings.API_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 dp = Dispatcher(storage=MemoryStorage())
+
+setup_dialogs(dp)
 
 register_all_dialogs(dp)
 

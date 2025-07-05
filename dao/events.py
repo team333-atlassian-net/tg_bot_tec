@@ -16,7 +16,7 @@ async def get_all_events():
 async def get_event_by_id(event_id: int):
     async with async_session_maker() as session:
         res = await session.execute(select(Event).where(Event.id == event_id))
-        return res.scalars().all()
+        return res.scalar_one_or_none()
     
 async def update_event(event_id: str, new_title: str, new_description: str):
     async with async_session_maker() as session:
