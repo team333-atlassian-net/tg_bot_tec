@@ -1,4 +1,5 @@
 import io
+import logging
 import pandas as pd
 from aiogram.fsm.state import State, StatesGroup
 from aiogram_dialog import Dialog, DialogManager, Window
@@ -6,10 +7,13 @@ from aiogram_dialog.widgets.text import Const
 from aiogram_dialog.widgets.input import TextInput, MessageInput
 from aiogram_dialog.widgets.kbd import Row, Button
 from aiogram.types import Message
+
 from dao.auth import add_user, add_user_with_excel
 from models import User
 from utils.auth import require_admin
 from utils.generate_pin import generate_unique_pin
+
+logger = logging.getLogger(__name__)
 
 class AddUserSG(StatesGroup):
     """Класс сотояния загрузки пользователя"""
@@ -49,8 +53,8 @@ async def on_excel_uploaded(message: Message, widget: MessageInput, dialog_manag
     added = await add_user_with_excel(df)
 
     await message.answer(f"✅ Загружено {added} новых пользователей из Excel.")
+    logger.info("Администратор зарегистрировал пользователей с помощью excel (/add_user)")
     await dialog_manager.done()
-    await dialog_manager.reset_stack()
 
 async def on_first_entered(message: Message,
                            value: str,
@@ -86,6 +90,7 @@ async def on_middle_entered(message: Message,
     await add_user(user)
 
     await message.answer(f"✅ Пользователь добавлен.\n📌 PIN-код: <b>{pin}</b>")
+    logger.info("Администратор зарегистрировал пользователя вручную (/add_user)")
     await dialog_manager.done()
 
 add_user_dialog = Dialog(

@@ -1,3 +1,4 @@
+import logging
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram import Bot, Dispatcher
@@ -8,10 +9,11 @@ from aiogram.enums.parse_mode import ParseMode
 from aiogram.client.bot import DefaultBotProperties
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
-from aiogram_dialog import DialogManager, setup_dialogs
+from aiogram_dialog import setup_dialogs
 
 
 from config import settings
+from logger import configure_logging
 from utils.auth import require_auth
 from dialogs import register_all_dialogs
 from handlers.login import router as login_router
@@ -19,6 +21,10 @@ from handlers.register import router as register_router
 from handlers.request_register_callbacks import router as register_request_router
 from handlers.add_user import router as add_users_router
 from handlers.events import router as events_router
+
+configure_logging()
+
+logger = logging.getLogger(__name__)
 
 bot = Bot(token=settings.API_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 dp = Dispatcher(storage=MemoryStorage())
@@ -37,6 +43,7 @@ dp.include_router(events_router)
 async def start_handler(message: Message):
     """Стартовый хэндлер"""
     await message.answer("Привет! Это бот для онбординга сотрудников компании ТЭК.\nЧтобы увидеть все команды, введите /help")
+    logger.info("Пользователь вызвал стартовый хэндлер (/start)")
 
 @dp.message(Command("help"))
 async def help_handler(message: Message):
@@ -68,6 +75,7 @@ async def help_handler(message: Message):
             "/help — Показать это справочное сообщение\n"
         )
     await message.answer(help_text)
+    logger.info("Пользователь вызвал хэндлер со справочной информацией (/help)")
 
 async def main():
     await dp.start_polling(bot)

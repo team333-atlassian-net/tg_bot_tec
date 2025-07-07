@@ -1,3 +1,4 @@
+import logging
 from aiogram_dialog import Dialog, DialogManager, Window
 from aiogram_dialog.widgets.input import TextInput
 from aiogram_dialog.widgets.text import Const
@@ -6,6 +7,8 @@ from aiogram.types import Message
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from dao.auth import create_registration_request, get_users
+
+logger = logging.getLogger(__name__)
 
 class RegisterDialogSG(StatesGroup):
     """Класс состояния регистрации"""
@@ -60,6 +63,7 @@ async def on_middle_entered(message: Message,
         )
 
     await message.answer("Заявка отправлена. Ожидайте одобрения.")
+    logger.info("Пользователь отправил заявку на регистрацию админу (/register)")
     await dialog_manager.done()
 
 # Диалог регистрации

@@ -1,11 +1,14 @@
+import logging
 from aiogram_dialog import Dialog, Window, DialogManager
 from aiogram_dialog.widgets.text import Const, Format
 from aiogram_dialog.widgets.kbd import Select, Button, Row
 from aiogram_dialog.widgets.input import TextInput
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import Message
+
 from dao.events import delete_event, get_all_events, update_event, get_event_by_id 
 
+logger = logging.getLogger(__name__)
 
 class ManageEventSG(StatesGroup):
     """
@@ -66,6 +69,7 @@ async def on_delete(callback, widget, dialog_manager: DialogManager, **kwargs):
     if event_id:
         await delete_event(int(event_id))
         await callback.message.answer("✅ Мероприятие удалено.")
+        logger.info("Администратор удалил мероприятие (/manage_events)")
     await dialog_manager.done()
 
 
@@ -97,6 +101,7 @@ async def on_edit_description(message: Message, value: str, dialog_manager: Dial
     if event_id and new_title:
         await update_event(int(event_id), new_title, new_description)
         await message.answer("✏️ Мероприятие отредактировано.")
+        logger.info("Администратор отредактировал мероприятие (/manage_events)")
     await dialog_manager.done()
 
 

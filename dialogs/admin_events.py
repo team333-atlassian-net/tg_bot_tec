@@ -1,11 +1,14 @@
+import logging
 from aiogram_dialog import Dialog, Window, DialogManager
 from aiogram_dialog.widgets.text import Const
 from aiogram_dialog.widgets.input import TextInput
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import Message
+
 from dao.auth import get_all_active_users
 from dao.events import create_event
 
+logger = logging.getLogger(__name__)
 
 class AdminEventSG(StatesGroup):
     """
@@ -51,6 +54,7 @@ async def on_description_entered(msg: Message, value: str, dialog_manager: Dialo
             pass  # Игнорируем ошибки при отправке сообщений
 
     await msg.answer("✅ Мероприятие добавлено и разослано сотрудникам.")
+    logger.info("Администратор добавил новое мероприятие (/add_event)")
     await dialog_manager.done()
 
 

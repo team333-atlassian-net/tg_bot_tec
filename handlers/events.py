@@ -1,12 +1,16 @@
+import logging
 from aiogram import Router
 from aiogram.filters import Command
 from aiogram_dialog import DialogManager, StartMode
 from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
+
 from dao.events import get_all_events
 from dialogs.admin_events import AdminEventSG
 from dialogs.manage_events import ManageEventSG
 from utils.auth import require_admin, require_auth
+
+logger = logging.getLogger(__name__)
 
 router = Router()
 
@@ -17,6 +21,7 @@ async def show_events(message: Message):
         await message.answer("Нет мероприятий")
         return
     text = "\n\n".join(f"🎉 <b>{e.title}</b>\n{e.description}" for e in events)
+    logger.info("Пользователь запросил список мероприятий")
     await message.answer(text, parse_mode="HTML")
 
 @router.message(Command("add_event"))

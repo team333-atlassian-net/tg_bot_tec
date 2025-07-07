@@ -1,3 +1,5 @@
+import logging
+
 from aiogram.fsm.state import State, StatesGroup
 from aiogram_dialog import Window, Dialog, DialogManager
 from aiogram_dialog.widgets.input import TextInput
@@ -5,6 +7,8 @@ from aiogram_dialog.widgets.text import Const
 from aiogram.types import Message
 
 from dao.auth import get_user, update_or_add_tg_id
+
+logger = logging.getLogger(__name__)
 
 class AuthDialogSG(StatesGroup):
     """Класс состояния для авторизации"""
@@ -32,6 +36,7 @@ async def on_pin_entered(
 
     await update_or_add_tg_id(user, tg_id) # добавляем tg_id в БД - авторизуем
     await message.answer(f"Добро пожаловать, {user.first_name}!")
+    logger.info("Пользователь авторизовался (/login)")
     await dialog_manager.done()
 
 
