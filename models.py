@@ -25,7 +25,6 @@ class CompanyInfo(Base):
     content = Column(Text)
     file_path = Column(Text)
     image_path = Column(Text)
-    created_at = Column(TIMESTAMP)
 
 
 class FAQ(Base):
@@ -46,20 +45,6 @@ class Feedback(Base):
     user_id = Column(UUID, ForeignKey('users.id'))
     text = Column(Text)
     is_anonymous = Column(Boolean)
-    created_at = Column(TIMESTAMP)
-
-
-class CanteenInfo(Base):
-    """Модель столовой"""
-    __tablename__ = 'canteen_info'
-
-    id = Column(Integer, primary_key=True)
-    work_schedule = Column(Text)
-    menu_text = Column(Text)
-    file_path = Column(Text)  # PDF или изображение
-    image_path = Column(Text)
-    created_by = Column(UUID, ForeignKey('users.id'))
-    created_at = Column(TIMESTAMP)
 
 
 class RegistrationRequest(Base):
@@ -71,7 +56,6 @@ class RegistrationRequest(Base):
     last_name = Column(String, nullable=False)
     middle_name = Column(String, nullable=False)
     status = Column(String, default="pending")  # pending, approved, rejected
-    created_at = Column(TIMESTAMP)
 
 
 class Event(Base):
