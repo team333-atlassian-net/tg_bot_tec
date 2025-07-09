@@ -7,7 +7,7 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from config import settings
 from alembic import context
-from models import CanteenInfo, CompanyInfo, User, FAQ, Event, Feedback
+from models import CompanyInfo, User, FAQ, Event, Feedback
 
 sys.path.insert(0, dirname(dirname(dirname(abspath(__file__)))))
 
