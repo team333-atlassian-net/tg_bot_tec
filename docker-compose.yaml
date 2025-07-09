@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:latest
+    container_name: obc-bd
+    environment:
+      POSTGRES_DB: onboarding_chat
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
