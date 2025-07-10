@@ -93,6 +93,7 @@ async def on_image_received(message: Message, widget: MessageInput, dialog_manag
     )
 
     await message.answer("✅ Информация о компании добавлена.")
+    logger.info("Администратор добавил информацию о компании")
     await dialog_manager.done()
 
 

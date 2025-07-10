@@ -1,7 +1,7 @@
 import logging
 from aiogram_dialog import Dialog, Window, DialogManager
 from aiogram_dialog.widgets.text import Const, Format
-from aiogram_dialog.widgets.kbd import Select, Button, Row
+from aiogram_dialog.widgets.kbd import Radio, ScrollingGroup, Button, Row
 from aiogram_dialog.widgets.input import TextInput
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import Message
@@ -111,18 +111,24 @@ async def on_exit_editing(callback, widget, dialog_manager: DialogManager, **kwa
     Завершает диалог и отправляет уведомление пользователю.
     """
     await dialog_manager.done()
-    await callback.message.answer("❌ Режим редактирования завершён.")
-
+    await callback.message.answer("❌ Вы вышли из режима редактирования.")
+    
 
 manage_event_dialog = Dialog(
     Window(
         Const("📋 Список мероприятий:"),
-        Select(
-            Format("✏️ {item[0]}\u200b"),
-            id="select_event",
-            item_id_getter=lambda x: x[1],
-            items="events",
-            on_click=on_event_chosen,
+        ScrollingGroup(
+            Radio(
+                Format("✏️ {item[0]}"),    # текст для выбранной кнопки
+                Format("✏️ {item[0]}"),    # текст для невыбранной кнопки
+                id="event_radio",
+                item_id_getter=lambda x: x[1],
+                on_click=on_event_chosen,
+                items="events",
+            ),
+            id="event_scroll",
+            width=1,
+            height=3,
         ),
         Button(Const("❌ Выйти из режима редактирования"), id="exit_editing", on_click=on_exit_editing),
         state=ManageEventSG.list,
@@ -151,3 +157,5 @@ manage_event_dialog = Dialog(
         state=ManageEventSG.edit_description,
     ),
 )
+
+

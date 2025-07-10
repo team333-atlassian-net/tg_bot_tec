@@ -22,6 +22,7 @@ from handlers.request_register_callbacks import router as register_request_route
 from handlers.add_user import router as add_users_router
 from handlers.events import router as events_router
 from handlers.company_info import router as company_info_router
+from handlers.organizational_structure import router as org_structure_router
 
 configure_logging()
 
@@ -40,6 +41,7 @@ dp.include_router(register_request_router)
 dp.include_router(add_users_router)
 dp.include_router(events_router)
 dp.include_router(company_info_router)
+dp.include_router(org_structure_router)
 
 @dp.message(Command('start'))
 async def start_handler(message: Message):
