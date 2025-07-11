@@ -13,35 +13,44 @@ from dao.org_structure import add_org_structure
 logger = logging.getLogger(__name__)
 
 class OrgStructureCreationSG(StatesGroup):
+    """
+    Состояния для диалога создания новой организационной структуры.
+    """
     title = State()
     description = State()
     file = State()
     confirm = State()
 
-async def on_title_input(
-    message: Message,
-    widget: TextInput,
-    dialog: DialogManager,
-):
+
+async def on_title_input(message: Message, widget: TextInput, dialog: DialogManager):
     """
-    Обработчик успешного ввода заголовка.
-    Сохраняет заголовок в dialog_data и переключается на состояние ввода описания.
+    Обрабатывает ввод названия организационной структуры.
+    Сохраняет введённый текст в dialog_data и переходит к описанию.
     """
     dialog.dialog_data["title"] = message.text
     await dialog.switch_to(OrgStructureCreationSG.description)
 
 
 async def on_description_input(message: Message, widget: TextInput, dialog: DialogManager):
+    """
+    Обрабатывает ввод описания организационной структуры.
+    Сохраняет описание и переходит к загрузке файла.
+    """
     dialog.dialog_data["description"] = message.text
     await dialog.switch_to(OrgStructureCreationSG.file)
 
 
 async def on_file_input(message: Message, widget, dialog: DialogManager):
+    """
+    Обрабатывает загрузку документа.
+    Сохраняет file_id и имя файла. Переходит к окну подтверждения.
+    """
     file_id = None
     file_name = None
     if message.document:
         file_id = message.document.file_id
         file_name = message.document.file_name
+
     if file_id:
         dialog.dialog_data["file_id"] = file_id
         dialog.dialog_data["file_name"] = file_name
@@ -51,19 +60,32 @@ async def on_file_input(message: Message, widget, dialog: DialogManager):
 
 
 async def on_description_skip(callback: CallbackQuery, button, dialog: DialogManager):
+    """
+    Обрабатывает нажатие кнопки "Пропустить" на этапе описания.
+    Устанавливает значение описания в None и переходит к загрузке файла.
+    """
     dialog.dialog_data["description"] = None
     await dialog.switch_to(OrgStructureCreationSG.file)
 
 
 async def on_file_skip(callback: CallbackQuery, button, dialog: DialogManager):
+    """
+    Обрабатывает нажатие кнопки "Пропустить" на этапе загрузки файла.
+    Устанавливает file_id в None и переходит к окну подтверждения.
+    """
     dialog.dialog_data["file_id"] = None
     await dialog.switch_to(OrgStructureCreationSG.confirm)
 
+
 async def get_confirm_data(dialog_manager: DialogManager, **kwargs):
+    """
+    Подготавливает данные для отображения в окне подтверждения.
+    Возвращает название, описание (или '-') и имя файла (или '-').
+    """
     title = dialog_manager.dialog_data.get("title")
     description = dialog_manager.dialog_data.get("description")
     file_name = dialog_manager.dialog_data.get("file_name")
-    
+
     file_text = file_name if file_name else "-"
     description_text = description if description else "-"
 
@@ -77,6 +99,10 @@ async def get_confirm_data(dialog_manager: DialogManager, **kwargs):
 
 
 async def on_confirm_press(callback: CallbackQuery, widget, dialog_manager: DialogManager, **kwargs):
+    """
+    Обрабатывает подтверждение создания новой оргструктуры.
+    Сохраняет данные в БД и завершает диалог.
+    """
     title = dialog_manager.dialog_data.get("title")
     description = dialog_manager.dialog_data.get("description")
     file_id = dialog_manager.dialog_data.get("file_id")
@@ -86,16 +112,9 @@ async def on_confirm_press(callback: CallbackQuery, widget, dialog_manager: Dial
         return
 
     await add_org_structure(title, description, file_id)
-
     await callback.message.answer("✅ Информация об организационной структуре добавлена")
-    logger.info("Администратор добавил новую информациб об оргструктуре (/add_event)")
+    logger.info("Администратор добавил новую информацию об оргструктуре (/add_event)")
     await dialog_manager.done()
-
-
-
-async def send_file_callback(c, button, manager: DialogManager):
-    telegram_file_id = button.widget_id.split("_", 1)[-1]
-    await c.message.answer_document(telegram_file_id)
 
 # --- Окна ---
 
