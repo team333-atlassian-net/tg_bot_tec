@@ -154,18 +154,25 @@ event_detail_window = Window(
 )
 
 edit_title_window = Window(
-    Const("Введите новое название мероприятия:"),
+    Const("Редактирование названия мероприятия:"),
+    Format("Вы хотите изменить название: \n<b>{event_title}</b>"),
     TextInput("edit_title", on_success=on_edit_title),
     Cancel(Const("❌ Отмена")),
     state=ManageEventSG.edit_title,
+    getter=get_event_details,
 )
 
+
 edit_description_window = Window(
-    Const("Введите новое описание мероприятия:"),
+    Const("Редактирование описания мероприятия:"),
+    Format("<b>{event_title}</b>"),
+    Format("Вы хотите изменить описание: \n{event_description}"),
     TextInput("edit_desc", on_success=on_edit_description),
     Cancel(Const("❌ Отмена")),
     state=ManageEventSG.edit_description,
+    getter=get_event_details,
 )
+
 
 manage_event_dialog = Dialog(
     list_window,
