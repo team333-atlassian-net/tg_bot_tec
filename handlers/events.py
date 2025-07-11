@@ -4,9 +4,9 @@ from aiogram.filters import Command
 from aiogram_dialog import DialogManager, StartMode
 from aiogram.types import Message
 
-from dialogs.events.add_event import EventCreationSG
-from dialogs.events.view_events import EventsViewSG
-from dialogs.events.manage_events import ManageEventSG
+from dao.events import get_all_events
+from dialogs.admin_events import AdminEventSG
+from dialogs.manage_events import ManageEventSG
 from utils.auth import require_admin, require_auth
 
 logger = logging.getLogger(__name__)
@@ -14,20 +14,24 @@ logger = logging.getLogger(__name__)
 router = Router()
 
 @router.message(Command("events"))
-async def show_virtual_excursions(message: Message, dialog_manager: DialogManager):
+async def show_events(message: Message):
     user = await require_auth(message)
     if not user:
         return
-    logger.info("Пользователь запросил список мероприятий (/events)")
-    await dialog_manager.start(EventsViewSG.list, mode=StartMode.RESET_STACK)
-
+    events = await get_all_events()
+    if not events:
+        await message.answer("Нет мероприятий")
+        return
+    text = "\n\n".join(f"<b>{e.title}</b>\n{e.description}" for e in events)
+    logger.info("Пользователь запросил список мероприятий")
+    await message.answer(text, parse_mode="HTML")
 
 @router.message(Command("add_event"))
 async def start_add_event(message, dialog_manager: DialogManager):
     user = await require_admin(message)
     if not user:
         return
-    await dialog_manager.start(EventCreationSG.title, mode=StartMode.RESET_STACK)
+    await dialog_manager.start(AdminEventSG.title, mode=StartMode.RESET_STACK)
 
 
 @router.message(Command("manage_events"))
