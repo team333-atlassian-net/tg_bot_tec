@@ -27,17 +27,21 @@ async def get_org_structure_by_id(org_structure_id: int):
         return res.scalar_one_or_none()
 
 
-async def update_org_structure(org_structure_id: str, new_title: str, new_content: str):
+async def update_org_structure(org_structure_id: int, new_title: str = None, new_description: str = None, file_id: str = None):
     async with async_session_maker() as session:
-        event = await session.get(OrganizationalStructure, org_structure_id)
-        if event:
-            event.title = new_title
-            event.content = new_content
+        org_structure = await session.get(OrganizationalStructure, org_structure_id)
+        if org_structure:
+            if new_title is not None:
+                org_structure.title = new_title
+            if new_description is not None:
+                org_structure.description = new_description
+            if file_id is not None:
+                org_structure.file_id = file_id
             await session.commit()
 
 async def delete_org_structure(org_structure_id: str):
     async with async_session_maker() as session:
-        event = await session.get(OrganizationalStructure, org_structure_id)
-        if event:
-            await session.delete(event)
+        org_structure = await session.get(OrganizationalStructure, org_structure_id)
+        if org_structure:
+            await session.delete(org_structure)
             await session.commit()

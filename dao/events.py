@@ -18,16 +18,13 @@ async def get_event_by_id(event_id: int):
         res = await session.execute(select(Event).where(Event.id == event_id))
         return res.scalar_one_or_none()
     
-async def update_event(event_id: str, new_title: str | None, new_description: str | None):
+async def update_event(event_id: str, new_title: str, new_description: str):
     async with async_session_maker() as session:
         event = await session.get(Event, event_id)
-        if not event:
-            return
-        if new_title:
+        if event:
             event.title = new_title
-        if new_description:
             event.description = new_description
-        await session.commit()
+            await session.commit()
 
 async def delete_event(event_id: str):
     async with async_session_maker() as session:
