@@ -64,3 +64,13 @@ class Event(Base):
     id = Column(Integer, primary_key=True)
     title = Column(String, nullable=False)
     description = Column(String)
+
+
+class OrganizationalStructure(Base):
+    """Организационная структура компании"""
+    __tablename__ = "organizational_structure"
+
+    id = Column(Integer, primary_key=True)
+    title = Column(Text, nullable=False)
+    content = Column(Text)
+    file_id = Column(Text)
