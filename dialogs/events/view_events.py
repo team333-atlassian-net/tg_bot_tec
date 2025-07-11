@@ -1,9 +1,3 @@
-"""
-Диалог просмотра мероприятий в Telegram-боте с использованием aiogram-dialog.
-
-Позволяет пользователю просматривать список мероприятий и смотреть подробности каждого.
-"""
-
 import logging
 
 from aiogram.fsm.state import State, StatesGroup

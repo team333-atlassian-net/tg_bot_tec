@@ -18,6 +18,7 @@ async def show_virtual_excursions(message: Message, dialog_manager: DialogManage
     user = await require_auth(message)
     if not user:
         return
+    logger.info("Пользователь запросил список мероприятий (/events)")
     await dialog_manager.start(EventsViewSG.list, mode=StartMode.RESET_STACK)
 
 
