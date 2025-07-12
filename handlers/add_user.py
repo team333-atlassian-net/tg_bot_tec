@@ -2,7 +2,7 @@ from aiogram import Router
 from aiogram.types import Message
 from aiogram.filters import Command
 from aiogram_dialog import DialogManager, StartMode
-from dialogs.add_user import AddUserSG
+from dialogs.auth.add_user import AddUserSG
 from utils.auth import require_admin
 
 router = Router()
