@@ -1,9 +1,9 @@
 from aiogram_dialog import setup_dialogs
 from aiogram import Dispatcher
 
-from dialogs.login import login_dialog
-from dialogs.register import register_dialog
-from dialogs.add_user import add_user_dialog
+from dialogs.auth.login import login_dialog
+from dialogs.auth.register import register_dialog
+from dialogs.auth.add_user import add_user_dialog
 
 from dialogs.events.view_events import view_event_dialog
 from dialogs.events.manage_events import manage_event_dialog
