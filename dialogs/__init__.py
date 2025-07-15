@@ -17,6 +17,10 @@ from dialogs.company_info.add_company_info import create_company_info_dialog
 from dialogs.company_info.view_company_info import company_info_dialog
 from dialogs.company_info.manage_view_company import manage_company_info_dialog
 
+from dialogs.faq.add_faq import add_faq_dialog
+from dialogs.faq.view_faq import faq_dialog
+from dialogs.faq.search_faq import faq_search_dialog
+from dialogs.faq.manage_faq import manage_faq_dialog
 
 def register_all_dialogs(dp: Dispatcher):
     setup_dialogs(dp) 
@@ -32,4 +36,8 @@ def register_all_dialogs(dp: Dispatcher):
     dp.include_router(create_company_info_dialog)
     dp.include_router(company_info_dialog)
     dp.include_router(manage_company_info_dialog)
+    dp.include_router(add_faq_dialog)
+    dp.include_router(faq_dialog)
+    dp.include_router(faq_search_dialog)
+    dp.include_router(manage_faq_dialog)
 
