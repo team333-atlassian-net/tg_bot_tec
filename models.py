@@ -3,6 +3,7 @@ from db import Base
 from sqlalchemy import Column, BigInteger, String, Boolean, Integer, Text, TIMESTAMP, ForeignKey, DateTime
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
+from sqlalchemy.orm import relationship
 
 class User(Base):
     """Пользователи"""
@@ -35,6 +36,19 @@ class FAQ(Base):
     question = Column(Text, nullable=False)
     answer = Column(Text, nullable=False)
     category = Column(Text, nullable=True)
+
+    keywords = relationship("FAQKeyWords", back_populates="faq", cascade="all, delete-orphan")
+
+
+class FAQKeyWords(Base):
+    """Ключевые слова к вопросу"""
+    __tablename__ = 'faq_keywords'
+
+    id = Column(Integer, primary_key=True)
+    faq_id = Column(Integer, ForeignKey('faq.id'), nullable=False)
+    word = Column(Text, nullable=False)
+
+    faq = relationship("FAQ", back_populates="keywords")
 
 
 class Feedback(Base):

@@ -146,7 +146,7 @@ list_window = Window(
         ),
         id="org_structure_scroll",
         width=1,
-        height=3,
+        height=5,
     ),
     Cancel(Const("❌ Выйти из режима редактирования"), id="exit_editing", on_click=on_exit),
     state=ManageOrgStructureSG.list,
@@ -160,7 +160,9 @@ org_structure_detail_window = Window(
     Row(
         Button(Const("✏️ Название"), id="edit_title", on_click=on_edit_title_start),
         Button(Const("✏️ Описание"), id="edit_desc", on_click=on_edit_description_start),
-        Button(Const("📎 Файл"), id="edit_file", on_click=lambda c, w, d, **k: d.switch_to(ManageOrgStructureSG.edit_file)),
+    ),
+    Row(
+        Button(Const("✏️ Файл"), id="edit_file", on_click=lambda c, w, d, **k: d.switch_to(ManageOrgStructureSG.edit_file)),
         Button(Const("🗑 Удалить"), id="delete", on_click=on_delete_org_structure),
     ),
     Button(Const("⬅️ Назад"), id="back", on_click=lambda c, w, d, **k: d.switch_to(ManageOrgStructureSG.list)),

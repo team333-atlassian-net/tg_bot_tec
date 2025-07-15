@@ -73,7 +73,7 @@ structure_list_window = Window(
         ),
         id="structure_scroll",
         width=1,
-        height=3,
+        height=5,
     ),
     Cancel(Const("❌ Отмена")),
     state=CompanyInfoViewSG.list,
