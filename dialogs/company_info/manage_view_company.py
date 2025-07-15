@@ -166,7 +166,7 @@ list_window = Window(
         ),
         id="company_info_scroll",
         width=1,
-        height=3,
+        height=5,
     ),
     Cancel(Const("❌ Выйти из режима редактирования"), id="exit_editing", on_click=on_exit),
     state=ManageCompanyInfoSG.list,
