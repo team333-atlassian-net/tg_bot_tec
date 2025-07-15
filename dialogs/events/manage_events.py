@@ -146,8 +146,8 @@ event_detail_window = Window(
     Row(
         Button(Const("✏️ Название"), id="edit_title", on_click=on_edit_title_start),
         Button(Const("✏️ Описание"), id="edit_desc", on_click=on_edit_description_start),
-        Button(Const("🗑 Удалить"), id="delete", on_click=on_delete_event),
     ),
+    Button(Const("🗑 Удалить"), id="delete", on_click=on_delete_event),
     Button(Const("⬅️ Назад"), id="back", on_click=lambda c, w, d, **k: d.switch_to(ManageEventSG.list)),
     state=ManageEventSG.event_action,
     getter=get_event_details,

@@ -180,10 +180,12 @@ company_info_detail_window = Window(
     Row(
         Button(Const("✏️ Название"), id="edit_title", on_click=on_edit_title_start),
         Button(Const("✏️ Описание"), id="edit_desc", on_click=on_edit_description_start),
-        Button(Const("📎 Файл"), id="edit_file", on_click=lambda c, w, d, **k: d.switch_to(ManageCompanyInfoSG.edit_file)),
-        Button(Const("📎 Фото"), id="edit_image", on_click=lambda c, w, d, **k: d.switch_to(ManageCompanyInfoSG.edit_image)),
-        Button(Const("🗑 Удалить"), id="delete", on_click=on_delete_company_info),
     ),
+    Row(
+        Button(Const("✏️ Файл"), id="edit_file", on_click=lambda c, w, d, **k: d.switch_to(ManageCompanyInfoSG.edit_file)),
+        Button(Const("✏️ Фото"), id="edit_image", on_click=lambda c, w, d, **k: d.switch_to(ManageCompanyInfoSG.edit_image)),
+    ),
+    Button(Const("🗑 Удалить"), id="delete", on_click=on_delete_company_info),
     Button(Const("⬅️ Назад"), id="back", on_click=lambda c, w, d, **k: d.switch_to(ManageCompanyInfoSG.list)),
     state=ManageCompanyInfoSG.company_info_action,
     getter=get_company_info_details,
