@@ -1,76 +1,57 @@
 import logging
+
+from aiogram.types import CallbackQuery
 from aiogram.fsm.state import State, StatesGroup
-from aiogram.types import Message, CallbackQuery
-from aiogram_dialog.widgets.input import MessageInput
-from aiogram_dialog import Dialog, Window, DialogManager
+
 from aiogram_dialog.widgets.text import Const, Format
-from aiogram_dialog.widgets.input import TextInput, MessageInput
-from aiogram_dialog.widgets.kbd import Button, Back, Cancel, Row, Select,Radio, ScrollingGroup
-
-
-async def detail_window_getter(dialog_manager: DialogManager, **kwargs):
-    """
-    Геттер для окна с подробной информацией о мероприятии.
-    Используется для передачи данных в шаблон Format.
-
-    Returns:
-        dict: {'faq': faq}
-    """
-    data = await get_faq_detail(dialog_manager)
-    return data
-
-
+from aiogram_dialog import Dialog, Window, DialogManager
+from aiogram_dialog.widgets.kbd import Button, Back, Cancel, Row, Radio, ScrollingGroup
 
 from dao.faq import get_all_faq, get_faq_by_id, get_all_categories, get_faq_by_category
 
 logger = logging.getLogger(__name__)
 
-
-# --- STATES ---
-
 class FAQSG(StatesGroup):
+    """
+    Состояния для диалога FAQ
+    """
     menu = State()
     list_all = State()
     category_select = State()
     category_questions = State()
     detail = State()
 
+# --- Геттеры ---
 
-# --- ОБЩИЙ ГЕТТЕР ДЕТАЛИ ---
+async def detail_window_getter(dialog_manager: DialogManager, **kwargs):
+    """
+    Геттер для окна с подробной информацией о вопросе.
+    Используется для передачи данных в шаблон Format.
+    """
+    data = await get_faq_detail(dialog_manager)
+    return data
 
-async def get_faq_detail(dialog_manager: DialogManager, **kwargs):
-    faq_id = int(dialog_manager.dialog_data["selected_faq_id"])
-    faq = await get_faq_by_id(faq_id)
-    return {"faq": faq}
-
-
-async def on_faq_selected(callback: CallbackQuery, widget, manager: DialogManager, selected_id: str):
-    manager.dialog_data["selected_faq_id"] = int(selected_id)
-    manager.dialog_data["from_state"] = manager.current_context().state.state
-    await manager.switch_to(FAQSG.detail)
-
-
-
-# --- ВСЕ ВОПРОСЫ ---
 
 async def get_faq_list(dialog_manager: DialogManager, **kwargs):
+    """
+    Возвращает список всех вопросов FAQ.
+    """
     faqs = await get_all_faq()
     return {"faqs": [(str(f.id), f.question) for f in faqs]}
 
 
-# --- КАТЕГОРИИ ---
-
 async def get_category_list(dialog_manager: DialogManager, **kwargs):
+    """
+    Возвращает список всех доступных категорий FAQ.
+    """
     categories = await get_all_categories()
     return {"categories": categories}
 
 
-async def on_category_selected(callback: CallbackQuery, widget, manager: DialogManager, selected_id: str):
-    manager.dialog_data["selected_category"] = selected_id
-    await manager.switch_to(FAQSG.category_questions)
-
-
 async def get_faqs_by_category(dialog_manager: DialogManager, **kwargs):
+    """
+    Возвращает вопросы FAQ, отфильтрованные по выбранной категории.
+    """
     category = dialog_manager.dialog_data.get("selected_category")
     if not category:
         return {
@@ -84,10 +65,39 @@ async def get_faqs_by_category(dialog_manager: DialogManager, **kwargs):
         "faqs": [(str(f.id), f.question) for f in faqs]
     }
 
-async def on_detail_back(callback: CallbackQuery, button: Button, manager: DialogManager):
-    from_state = manager.dialog_data.get("from_state")
 
-    # Очистим, чтобы не оставалось мусора
+async def get_faq_detail(dialog_manager: DialogManager, **kwargs):
+    """
+    Возвращает подробную информацию о выбранном вопросе.
+    """
+    faq_id = int(dialog_manager.dialog_data["selected_faq_id"])
+    faq = await get_faq_by_id(faq_id)
+    return {"faq": faq}
+
+# --- Коллбэки ---
+
+async def on_faq_selected(callback: CallbackQuery, widget, manager: DialogManager, selected_id: str):
+    """
+    Обрабатывает выбор вопроса из списка. Переходит на окно с деталями.
+    """
+    manager.dialog_data["selected_faq_id"] = int(selected_id)
+    manager.dialog_data["from_state"] = manager.current_context().state.state
+    await manager.switch_to(FAQSG.detail)
+
+
+async def on_category_selected(callback: CallbackQuery, widget, manager: DialogManager, selected_id: str):
+    """
+    Обрабатывает выбор категории. Сохраняет выбранную категорию и переходит к списку вопросов по ней.
+    """
+    manager.dialog_data["selected_category"] = selected_id
+    await manager.switch_to(FAQSG.category_questions)
+
+
+async def on_detail_back(callback: CallbackQuery, button: Button, manager: DialogManager):
+    """
+    Возвращает на окно, с которого пользователь попал на детали вопроса.
+    """
+    from_state = manager.dialog_data.get("from_state")
     manager.dialog_data.pop("from_state", None)
 
     if from_state == FAQSG.list_all.state:
@@ -95,10 +105,13 @@ async def on_detail_back(callback: CallbackQuery, button: Button, manager: Dialo
     elif from_state == FAQSG.category_questions.state:
         await manager.switch_to(FAQSG.category_questions)
     else:
-        # Фолбэк, если почему-то потеряли контекст
         await manager.switch_to(FAQSG.menu)
 
+
 async def on_back_to_menu(callback: CallbackQuery, button: Button, manager: DialogManager):
+    """
+    Обрабатывает кнопку "Назад" к главному меню из категорий.
+    """
     await manager.switch_to(FAQSG.menu)
 
 # --- ОКНА ---
@@ -106,9 +119,15 @@ async def on_back_to_menu(callback: CallbackQuery, button: Button, manager: Dial
 # Главное меню
 faq_menu_window = Window(
     Const("📚 Что вы хотите сделать?"),
-    Row(
-        Button(Const("📋 Все вопросы"), id="all", on_click=lambda c, b, m: m.switch_to(FAQSG.list_all)),
-        Button(Const("🏷 По категориям"), id="by_cat", on_click=lambda c, b, m: m.switch_to(FAQSG.category_select)),
+    Button(
+        Const("📋 Посмотреть все вопросы"),
+        id="all",
+        on_click=lambda c, b, m: m.switch_to(FAQSG.list_all),
+    ),
+    Button(
+        Const("🏷 Посмотреть все категории вопросов"),
+        id="by_cat",
+        on_click=lambda c, b, m: m.switch_to(FAQSG.category_select),
     ),
     Cancel(Const("❌ Отмена")),
     state=FAQSG.menu,
@@ -135,8 +154,9 @@ faq_list_window = Window(
     getter=get_faq_list,
 )
 
+# Список всех категорий
 faq_category_select_window = Window(
-    Const("🏷 Выберите категорию:"),
+    Const("📋 Выберите категорию:"),
     ScrollingGroup(
         Radio(
             Format("{item}"),
@@ -154,8 +174,6 @@ faq_category_select_window = Window(
     state=FAQSG.category_select,
     getter=get_category_list,
 )
-
-
 
 # Список вопросов по категории
 faq_by_category_window = Window(
@@ -186,12 +204,8 @@ faq_detail_window = Window(
         Cancel(Const("❌ Закрыть")),
     ),
     state=FAQSG.detail,
-    getter=get_faq_detail,
+    getter=detail_window_getter,
 )
-
-
-
-# --- ДИАЛОГ ---
 
 faq_dialog = Dialog(
     faq_menu_window,

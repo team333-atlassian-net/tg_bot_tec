@@ -82,7 +82,7 @@ event_list_window = Window(
         ),
         id="event_scroll",
         width=1,
-        height=3,
+        height=5,
     ),
     Cancel(Const("❌ Отмена")),
     state=EventsViewSG.list,
