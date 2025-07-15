@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 router = Router()
 
 @router.message(Command("faq"))
-async def show_virtual_excursions(message: Message, dialog_manager: DialogManager):
+async def show_faq(message: Message, dialog_manager: DialogManager):
     user = await require_auth(message)
     if not user:
         return
@@ -23,7 +23,7 @@ async def show_virtual_excursions(message: Message, dialog_manager: DialogManage
     await dialog_manager.start(FAQSG.menu, mode=StartMode.RESET_STACK)
     
 @router.message(Command("add_faq"))
-async def start_add_event(message, dialog_manager: DialogManager):
+async def start_add_faq(message, dialog_manager: DialogManager):
     user = await require_admin(message)
     if not user:
         return
@@ -33,12 +33,13 @@ async def start_add_event(message, dialog_manager: DialogManager):
 @router.message(Command("search_faq"))
 async def start_faq_search(message: Message, dialog_manager: DialogManager):
     user = await require_auth(message)
-    if user:
-        await dialog_manager.start(FAQSearchSG.search_input)
+    if not user:
+        return
+    await dialog_manager.start(FAQSearchSG.search_input)
 
 
 @router.message(Command("manage_faq"))
-async def start_manage_events(message, dialog_manager: DialogManager):
+async def start_manage_faq(message, dialog_manager: DialogManager):
     user = await require_admin(message)
     if not user:
         return
