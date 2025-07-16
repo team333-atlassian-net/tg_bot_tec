@@ -1,6 +1,6 @@
 import uuid
 from db import Base
-from sqlalchemy import Column, BigInteger, String, Boolean, Integer, Text, TIMESTAMP, ForeignKey, DateTime
+from sqlalchemy import Column, BigInteger, String, Boolean, Integer, Text, Time, ForeignKey, DateTime, Date
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
@@ -88,3 +88,20 @@ class OrganizationalStructure(Base):
     title = Column(Text, nullable=False)
     content = Column(Text)
     file_id = Column(Text)
+
+
+class Canteen(Base):
+    """Информация о столовой"""
+    __tablename__ = "canteen"
+    id = Column(Integer, primary_key=True)
+    start_time = Column(Time, nullable=False)
+    end_time = Column(Time, nullable=False)
+    description = Column(Text, nullable=True)
+
+class CanteenMenu(Base):
+    """Меню столовой"""
+    __tablename__ = "canteen_menu"
+    id = Column(Integer, primary_key=True)
+    date = Column(Date, nullable=False)
+    file_id = Column(String)
+    menu = Column(Text)
