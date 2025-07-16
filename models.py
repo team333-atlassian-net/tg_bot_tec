@@ -1,4 +1,5 @@
 import uuid
+from enum import Enum
 from db import Base
 from sqlalchemy import Column, BigInteger, String, Boolean, Integer, Text, Time, ForeignKey, DateTime, Date
 from sqlalchemy.dialects.postgresql import UUID
@@ -104,4 +105,11 @@ class CanteenMenu(Base):
     id = Column(Integer, primary_key=True)
     date = Column(Date, nullable=False)
     file_id = Column(String)
+    file_type = Column(String)
     menu = Column(Text)
+
+# -------------
+
+class CanteenMenuFileType(str, Enum):
+    PHOTO = "PHOTO"
+    FILE = "FILE"
