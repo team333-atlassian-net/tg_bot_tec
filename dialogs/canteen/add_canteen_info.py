@@ -76,7 +76,7 @@ async def get_canteen_confirm_data(dialog_manager: DialogManager, **kwargs):
     return {
         "start": dialog_manager.dialog_data.get("start_time"),
         "end": dialog_manager.dialog_data.get("end_time"),
-        "description": dialog_manager.dialog_data.get("description", "-")
+        "description": dialog_manager.dialog_data.get("description") or "-"
     }
 
 
@@ -139,9 +139,9 @@ async def on_menu_file_input(message: Message, widget, dialog: DialogManager):
 
 async def get_menu_confirm_data(dialog_manager: DialogManager, **kwargs):
     return {
-        "date": dialog_manager.dialog_data.get("date", "-"),
-        "menu": dialog_manager.dialog_data.get("menu", "—"),
-        "file_name": dialog_manager.dialog_data.get("file_name", "—")
+        "date": dialog_manager.dialog_data.get("date"),
+        "menu": dialog_manager.dialog_data.get("menu") or "-",
+        "file_name": dialog_manager.dialog_data.get("file_name") or "-"
     }
 
 
@@ -196,7 +196,7 @@ choice_window = Window(
     Const("📚 Что вы хотите добавить?"),
     Row(
         Button(
-            Const("📋 Информация о столовой"),
+            Const("🏢 Информация о столовой"),
             id="canteen",
             on_click=lambda c, b, m: m.switch_to(CanteenInfoCreationSG.start_time)),
         Button(

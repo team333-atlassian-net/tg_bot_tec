@@ -100,8 +100,8 @@ async def get_canteen_info_detail(dialog_manager: DialogManager, **kwargs):
 start_window = Window(
     Const("🍽 Что вы хотите посмотреть?"),
     Row(
-        Button(Const("📋 Меню"), id="menu", on_click=lambda c, b, m: m.switch_to(CanteenViewSG.menu_list)),
         Button(Const("🏢 Информация о столовой"), id="info", on_click=lambda c, b, m: m.switch_to(CanteenViewSG.info)),
+        Button(Const("📋 Меню"), id="menu", on_click=lambda c, b, m: m.switch_to(CanteenViewSG.menu_list)),
     ),
     Cancel(Const("❌ Отмена")),
     state=CanteenViewSG.start,
@@ -112,7 +112,7 @@ menu_list_window = Window(
     Const("📅 Выберите дату меню:"),
     ScrollingGroup(
         Radio(
-            checked_text=Format("✅ {item[1]}"),
+            checked_text=Format("{item[1]}"),
             unchecked_text=Format("{item[1]}"),
             id="menu_radio",
             item_id_getter=lambda x: x[0],
@@ -124,6 +124,7 @@ menu_list_window = Window(
         height=5,
     ),
     Row(
+        Button(Const("⬅️ Назад"), id="back_to_menu", on_click=lambda c, b, m: m.switch_to(CanteenViewSG.start)),
         Button(Const("📆 Календарь"), id="calendar", on_click=lambda c, b, m: m.switch_to(CanteenViewSG.calendar)),
         Cancel(Const("❌ Отмена")),
     ),
@@ -143,7 +144,9 @@ menu_detail_window = Window(
 calendar_window = Window(
     Const("📆 Выберите дату меню:"),
     Calendar(id="menu_calendar", on_click=on_date_selected),
-    Row(Back(Const("⬅️ Назад")), Cancel(Const("❌ Отмена"))),
+    Row(
+        Button(Const("⬅️ Назад"), id="back_to_menu", on_click=lambda c, b, m: m.switch_to(CanteenViewSG.menu_list)),
+        Cancel(Const("❌ Отмена"))),
     state=CanteenViewSG.calendar,
 )
 
