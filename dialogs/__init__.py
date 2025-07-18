@@ -22,6 +22,9 @@ from dialogs.faq.view_faq import faq_dialog
 from dialogs.faq.search_faq import faq_search_dialog
 from dialogs.faq.manage_faq import manage_faq_dialog
 
+from dialogs.canteen.add_canteen_info import add_canteen_info_dialog
+from dialogs.canteen.view_canteen_info import canteen_dialog
+from dialogs.canteen.manage_canteen_info import manage_canteen_dialog
 def register_all_dialogs(dp: Dispatcher):
     setup_dialogs(dp) 
     dp.include_router(login_dialog)
@@ -40,4 +43,7 @@ def register_all_dialogs(dp: Dispatcher):
     dp.include_router(faq_dialog)
     dp.include_router(faq_search_dialog)
     dp.include_router(manage_faq_dialog)
+    dp.include_router(add_canteen_info_dialog)
+    dp.include_router(canteen_dialog)
+    dp.include_router(manage_canteen_dialog)
 
