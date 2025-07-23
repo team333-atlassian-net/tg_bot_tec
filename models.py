@@ -102,8 +102,8 @@ class ExcursionMaterial(Base):
     excursion_id = Column(
         Integer, ForeignKey("virtual_excursions.id", ondelete="CASCADE"), nullable=False
     )
-    telegram_file_id = Column(String, nullable=False)
-    file_name = Column(String, nullable=True)
+    telegram_file_id = Column(String, nullable=True)
+    name = Column(String, nullable=False)
     text = Column(String, nullable=True)
 
     excursion = relationship("VirtualExcursion", back_populates="materials")

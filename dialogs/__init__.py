@@ -7,10 +7,9 @@ from dialogs.add_user import add_user_dialog
 from dialogs.admin_events import admin_event_dialog
 from dialogs.manage_events import manage_event_dialog
 from dialogs.company_info import add_company_info_dialog
-from dialogs.virtual_excursions import (
-    create_virtual_excursion_dialog,
-    virtual_excursion_dialog,
-)
+from dialogs.virtual_excursions.create.dialog import dialog as create_virtex_dialog
+from dialogs.virtual_excursions.view.dialog import dialog as virtex_dialog
+from dialogs.virtual_excursions.edit.dialog import dialog as edit_virtex_dialog
 
 
 def register_all_dialogs(dp: Dispatcher):
@@ -21,5 +20,6 @@ def register_all_dialogs(dp: Dispatcher):
     dp.include_router(admin_event_dialog)
     dp.include_router(manage_event_dialog)
     dp.include_router(add_company_info_dialog)
-    dp.include_router(create_virtual_excursion_dialog)
-    dp.include_router(virtual_excursion_dialog)
+    dp.include_router(create_virtex_dialog)
+    dp.include_router(virtex_dialog)
+    dp.include_router(edit_virtex_dialog)
