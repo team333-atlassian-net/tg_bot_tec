@@ -51,8 +51,10 @@ async def add_user(user):
         await session.commit()
 
 async def add_user_with_excel(df):
-    """Добавляет пользователя в БД из excel файла"""
-    added = 0
+    """Добавляет пользователей в БД из Excel-файла.
+    Возвращает список (ФИО, PIN-код) для каждого добавленного пользователя.
+    """
+    added_users = []
     async with async_session_maker() as session:
         for _, row in df.iterrows():
             pin = await generate_unique_pin()
@@ -64,10 +66,10 @@ async def add_user_with_excel(df):
                 tg_id=None
             )
             session.add(user)
-            added += 1
+            full_name = f"{row['last_name']} {row['first_name']} {row['middle_name']}"
+            added_users.append((full_name, pin))
         await session.commit()
-    return added
-
+    return added_users
 
 async def is_admin(tg_id: int) -> bool:
     """Проверяет, что роль - админ"""
