@@ -11,7 +11,6 @@ from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram_dialog import setup_dialogs
 
-
 from config import settings
 from logger import configure_logging
 from utils.auth import require_auth
@@ -22,6 +21,7 @@ from handlers.request_register_callbacks import router as register_request_route
 from handlers.add_user import router as add_users_router
 from handlers.events import router as events_router
 from handlers.company_info import router as company_info_router
+from handlers.virtual_excursions import router as virtual_excursion_router
 from handlers.organizational_structure import router as org_structure_router
 from handlers.faq import router as faq_router
 from handlers.canteen import router as canteen_router
@@ -29,8 +29,11 @@ from handlers.canteen import router as canteen_router
 configure_logging()
 
 logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG)
 
-bot = Bot(token=settings.API_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+bot = Bot(
+    token=settings.API_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML)
+)
 dp = Dispatcher(storage=MemoryStorage())
 
 setup_dialogs(dp)
@@ -43,21 +46,25 @@ dp.include_router(register_request_router)
 dp.include_router(add_users_router)
 dp.include_router(events_router)
 dp.include_router(company_info_router)
+dp.include_router(virtual_excursion_router)
 dp.include_router(org_structure_router)
 dp.include_router(faq_router)
 dp.include_router(canteen_router)
 
-@dp.message(Command('start'))
+@dp.message(Command("start"))
 async def start_handler(message: Message):
     """Стартовый хэндлер"""
-    await message.answer("Привет! Это бот для онбординга сотрудников компании ТЭК.\nЧтобы увидеть все команды, введите /help")
+    await message.answer(
+        "Привет! Это бот для онбординга сотрудников компании ТЭК.\nЧтобы увидеть все команды, введите /help"
+    )
     logger.info("Пользователь вызвал стартовый хэндлер (/start)")
+
 
 @dp.message(Command("help"))
 async def help_handler(message: Message):
     """Хэндлер со справочной информацией"""
-    
-    user = await require_auth(message) # проверка что пользователь авторизован
+
+    user = await require_auth(message)  # проверка что пользователь авторизован
     if not user:
         return
     
@@ -69,6 +76,8 @@ async def help_handler(message: Message):
             "/manage_events — Управление корпоративными мероприятиями\n"
             "/add_company_info — Добавить информацию о компании\n"
             "/manage_company_info — Управление информацией о компании\n"
+            "/add_virtual_excursion — Создать виртуальную экскурсию\n"
+            "/add_excursion_material — Добавить материалы экскурсии\n"
             "/add_org_structure — Добавить информацию об организационной структуре\n"
             "/manage_org_structures — Управление организационной структурой\n"
             "/add_faq — Добавить вопрос и ответ\n"
@@ -79,12 +88,6 @@ async def help_handler(message: Message):
             "/login — Авторизация по ПИН-коду\n"
             "/register — Регистрация в системе\n"
             "/help — Показать это справочное сообщение\n"
-            "/events — Показать список всех мероприятий\n"
-            "/company_info — Показать информацию о компании\n"
-            "/org_structures — Показать организационную структуру\n"
-            "/faq — Показать часто задаваемые вопросы\n"
-            "/search_faq — Поиск по вопросам\n"
-            "/canteen — Показать информацию по столовой или меню\n"
         )
     else:  # Команды для обычного пользователя
         help_text = (
@@ -92,10 +95,15 @@ async def help_handler(message: Message):
             "/start — Начать взаимодействие с ботом\n"
             "/login — Авторизация по ПИН-коду\n"
             "/register — Регистрация в системе\n"
+            "/events — Показать список всех корпоративных мероприятий\n"
+            "/company_info — Показать информацию о компании\n"
+            "/help — Показать это справочное сообщение\n"
+            "/virtual_excursions — Показать список виртуальных экскурсий\n"
             "/help — Показать это справочное сообщение\n"
             "/events — Показать список всех мероприятий\n"
             "/company_info — Показать информацию о компании\n"
             "/org_structures — Показать организационную структуру\n"
+            "/virtual_excursions — Показать список виртуальных экскурсий\n"
             "/faq — Показать часто задаваемые вопросы\n"
             "/search_faq — Поиск по вопросам\n"
             "/canteen — Показать информацию по столовой или меню\n"
@@ -104,9 +112,12 @@ async def help_handler(message: Message):
     await message.answer(help_text)
     logger.info("Пользователь вызвал хэндлер со справочной информацией (/help)")
 
+
 async def main():
     await dp.start_polling(bot)
 
+
 if __name__ == "__main__":
     import asyncio
+
     asyncio.run(main())

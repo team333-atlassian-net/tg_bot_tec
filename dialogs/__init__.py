@@ -1,9 +1,16 @@
 from aiogram_dialog import setup_dialogs
 from aiogram import Dispatcher
 
-from dialogs.auth.login import login_dialog
-from dialogs.auth.register import register_dialog
-from dialogs.auth.add_user import add_user_dialog
+from dialogs.login import login_dialog
+from dialogs.register import register_dialog
+from dialogs.add_user import add_user_dialog
+from dialogs.admin_events import admin_event_dialog
+from dialogs.manage_events import manage_event_dialog
+from dialogs.company_info import add_company_info_dialog
+
+from dialogs.virtual_excursions.create.dialog import dialog as create_virtex_dialog
+from dialogs.virtual_excursions.view.dialog import dialog as virtex_dialog
+from dialogs.virtual_excursions.edit.dialog import dialog as edit_virtex_dialog
 
 from dialogs.events.view_events import view_event_dialog
 from dialogs.events.manage_events import manage_event_dialog
@@ -25,8 +32,9 @@ from dialogs.faq.manage_faq import manage_faq_dialog
 from dialogs.canteen.add_canteen_info import add_canteen_info_dialog
 from dialogs.canteen.view_canteen_info import canteen_dialog
 from dialogs.canteen.manage_canteen_info import manage_canteen_dialog
+
 def register_all_dialogs(dp: Dispatcher):
-    setup_dialogs(dp) 
+    setup_dialogs(dp)
     dp.include_router(login_dialog)
     dp.include_router(register_dialog)
     dp.include_router(add_user_dialog)
@@ -37,6 +45,9 @@ def register_all_dialogs(dp: Dispatcher):
     dp.include_router(manage_org_structure_dialog)
     dp.include_router(org_structure_dialog)
     dp.include_router(create_company_info_dialog)
+    dp.include_router(create_virtex_dialog)
+    dp.include_router(virtex_dialog)
+    dp.include_router(edit_virtex_dialog)
     dp.include_router(company_info_dialog)
     dp.include_router(manage_company_info_dialog)
     dp.include_router(add_faq_dialog)
@@ -46,4 +57,3 @@ def register_all_dialogs(dp: Dispatcher):
     dp.include_router(add_canteen_info_dialog)
     dp.include_router(canteen_dialog)
     dp.include_router(manage_canteen_dialog)
-
