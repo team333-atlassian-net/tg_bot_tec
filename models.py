@@ -1,20 +1,10 @@
 import uuid
+from enum import Enum
 from db import Base
-from sqlalchemy import (
-    Column,
-    BigInteger,
-    String,
-    Boolean,
-    Integer,
-    Text,
-    TIMESTAMP,
-    ForeignKey,
-    DateTime,
-)
+from sqlalchemy import Column, BigInteger, String, Boolean, Integer, Text, Time, ForeignKey, DateTime, Date
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
-
 
 class User(Base):
     """Пользователи"""
@@ -51,6 +41,19 @@ class FAQ(Base):
     question = Column(Text, nullable=False)
     answer = Column(Text, nullable=False)
     category = Column(Text, nullable=True)
+
+    keywords = relationship("FAQKeyWords", back_populates="faq", cascade="all, delete-orphan")
+
+
+class FAQKeyWords(Base):
+    """Ключевые слова к вопросу"""
+    __tablename__ = 'faq_keywords'
+
+    id = Column(Integer, primary_key=True)
+    faq_id = Column(Integer, ForeignKey('faq.id'), nullable=False)
+    word = Column(Text, nullable=False)
+
+    faq = relationship("FAQ", back_populates="keywords")
 
 
 class Feedback(Base):
@@ -107,3 +110,36 @@ class ExcursionMaterial(Base):
     text = Column(String, nullable=True)
 
     excursion = relationship("VirtualExcursion", back_populates="materials")
+
+class OrganizationalStructure(Base):
+    """Организационная структура компании"""
+    __tablename__ = "organizational_structure"
+
+    id = Column(Integer, primary_key=True)
+    title = Column(Text, nullable=False)
+    content = Column(Text)
+    file_id = Column(Text)
+
+
+class Canteen(Base):
+    """Информация о столовой"""
+    __tablename__ = "canteen"
+    id = Column(Integer, primary_key=True)
+    start_time = Column(Time, nullable=False)
+    end_time = Column(Time, nullable=False)
+    description = Column(Text, nullable=True)
+
+class CanteenMenu(Base):
+    """Меню столовой"""
+    __tablename__ = "canteen_menu"
+    id = Column(Integer, primary_key=True)
+    date = Column(Date, nullable=False)
+    file_id = Column(String)
+    file_type = Column(String)
+    menu = Column(Text)
+
+# -------------
+
+class CanteenMenuFileType(str, Enum):
+    PHOTO = "PHOTO"
+    FILE = "FILE"

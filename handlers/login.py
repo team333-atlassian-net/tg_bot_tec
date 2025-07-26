@@ -3,7 +3,7 @@ from aiogram.filters import Command
 from aiogram.types import Message
 from aiogram_dialog import DialogManager, StartMode
 
-from dialogs.login import AuthDialogSG
+from dialogs.auth.login import AuthDialogSG
 
 router = Router()
 
