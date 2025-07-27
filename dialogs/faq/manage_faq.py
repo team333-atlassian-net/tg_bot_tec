@@ -55,11 +55,11 @@ async def get_faq_details(dialog_manager: DialogManager, **kwargs):
             "faq_category": "Не указана",
             "faq_keywords": "",
         }
-    keywords_str = ", ".join(kw.word for kw in faq.keywords) if faq.keywords else ""
+    keywords_str = ", ".join(kw.word for kw in faq.keywords) if faq.keywords else "-"
     return {
         "faq_question": faq.question,
         "faq_answer": faq.answer,
-        "faq_category": faq.category,
+        "faq_category": faq.category or "-",
         "faq_keywords": keywords_str,
     }
 
@@ -96,6 +96,7 @@ async def on_edit_question(message: Message, value: TextInput, dialog_manager: D
         await update_faq(int(faq_id), value.get_value(), None, None)
         await message.answer("✏️ Вопрос обновлен.")
         logger.info("Админ обновил вопрос (/manage_faq)")
+        await dialog_manager.switch_to(ManageFAQSQ.faq_action)
     await dialog_manager.done()
 
 
@@ -110,6 +111,7 @@ async def on_edit_answer(message: Message, value: TextInput, dialog_manager: Dia
         await update_faq(int(faq_id), None, value.get_value(), None)
         await message.answer("📝 Описание обновлено.")
         logger.info("Админ обновил ответ (/manage_faq)")
+        await dialog_manager.switch_to(ManageFAQSQ.faq_action)
     await dialog_manager.done()
 
 
@@ -124,6 +126,7 @@ async def on_edit_category(msg: Message, value: TextInput, dialog_manager: Dialo
         await update_faq(int(faq_id), None, None, new_category=value.get_value())
         await msg.answer("🏷 Категория обновлена.")
         logger.info("Админ обновил категорию вопроса (/manage_faq)")
+        await dialog_manager.switch_to(ManageFAQSQ.faq_action)
     await dialog_manager.done()
 
 
@@ -139,6 +142,7 @@ async def on_edit_keywords(msg: Message, value: TextInput, dialog_manager: Dialo
         words = [w.strip() for w in value.get_value().split(",") if w.strip()]
         await update_key_words(int(faq_id), keywords=words)
         await msg.answer("🔑 Ключевые слова обновлены.")
+        await dialog_manager.switch_to(ManageFAQSQ.faq_action)
         logger.info("Админ обновил ключевые слова вопроса (/manage_faq)")
     await dialog_manager.done()
 
@@ -154,6 +158,7 @@ async def on_delete_faq(callback: CallbackQuery, widget, dialog_manager: DialogM
         await delete_faq(int(faq_id))
         await callback.message.answer("✅ Вопрос удален.")
         logger.info("Администратор удалил мероприятие (/manage_faqs)")
+        await dialog_manager.switch_to(ManageFAQSQ.list)
     await dialog_manager.done()
 
 
@@ -212,7 +217,10 @@ edit_question_window = Window(
     Const("Редактирование вопроса:"),
     Format("Вы хотите изменить вопрос: \n<b>{faq_question}</b>"),
     TextInput("edit_question", on_success=on_edit_question),
-    Cancel(Const("❌ Отмена")),
+    Row(
+        Button(Const("⬅️ Назад"), id="back", on_click=lambda c, w, d, **k: d.switch_to(ManageFAQSQ.faq_action)),
+        Cancel(Const("❌ Отмена")),
+    ),
     state=ManageFAQSQ.edit_question,
     getter=get_faq_details,
 )
@@ -222,7 +230,10 @@ edit_answer_window = Window(
     Format("<b>{faq_question}</b>"),
     Format("Вы хотите изменить ответ: \n{faq_answer}"),
     TextInput("edit_desc", on_success=on_edit_answer),
-    Cancel(Const("❌ Отмена")),
+    Row(
+        Button(Const("⬅️ Назад"), id="back", on_click=lambda c, w, d, **k: d.switch_to(ManageFAQSQ.faq_action)),
+        Cancel(Const("❌ Отмена")),
+    ),
     state=ManageFAQSQ.edit_answer,
     getter=get_faq_details,
 )
@@ -231,7 +242,10 @@ edit_category_window = Window(
     Const("Редактирование категории:"),
     Format("Текущая категория: {faq_category}"),
     TextInput("edit_category", on_success=on_edit_category),
-    Cancel(Const("❌ Отмена")),
+    Row(
+        Button(Const("⬅️ Назад"), id="back", on_click=lambda c, w, d, **k: d.switch_to(ManageFAQSQ.faq_action)),
+        Cancel(Const("❌ Отмена")),
+    ),
     state=ManageFAQSQ.edit_category,
     getter=get_faq_details,
 )
@@ -240,7 +254,10 @@ edit_keywords_window = Window(
     Const("Редактирование ключевых слов:"),
     Format("Текущие ключевые слова: {faq_keywords}\n\nВведите новые через запятую:"),
     TextInput("edit_keywords", on_success=on_edit_keywords),
-    Cancel(Const("❌ Отмена")),
+    Row(
+        Button(Const("⬅️ Назад"), id="back", on_click=lambda c, w, d, **k: d.switch_to(ManageFAQSQ.faq_action)),
+        Cancel(Const("❌ Отмена")),
+    ),
     state=ManageFAQSQ.edit_keywords,
     getter=get_faq_details,
 )

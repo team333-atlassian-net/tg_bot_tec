@@ -35,8 +35,7 @@ async def get_company_info_detail(dialog_manager: DialogManager, **kwargs):
         company_info = await get_company_info_by_id(int(company_info_id))
         dialog_manager.dialog_data["company_info"] = company_info
 
-    content = company_info.content if company_info and company_info.content else ""
-    return {"company_info": company_info, "content": content}
+    return {"company_info": company_info, "content": company_info.content or "-"}
 
 
 async def on_company_info_selected(callback: CallbackQuery, widget, manager: DialogManager, selected_id: str):
