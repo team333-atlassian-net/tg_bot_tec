@@ -10,7 +10,7 @@ from aiogram_dialog.widgets.kbd import Button, Cancel, Row
 from aiogram_dialog.widgets.input import MessageInput, TextInput
 from aiogram_dialog.widgets.kbd import Calendar, Radio, ScrollingGroup
 
-from dao.canteen import delete_canteen_info, delete_canteen_menu_file, get_all_canteen_menu, get_canteen_menu_by_date, get_canteen_menu_by_id, update_canteen_info, update_canteen_menu
+from dao.canteen import delete_canteen_info, delete_canteen_menu, delete_canteen_menu_file, get_all_canteen_menu, get_canteen_menu_by_date, get_canteen_menu_by_id, update_canteen_info, update_canteen_menu
 from dao.canteen import get_canteen_info as dao_get_canteen_info
 from models import CanteenMenuFileType
 
@@ -46,17 +46,15 @@ async def get_canteen_info(dialog_manager: DialogManager, **kwargs):
     return {
         "start_time": canteen.start_time,
         "end_time": canteen.end_time,
-        "description": canteen.description,
+        "description": canteen.description or "-",
     }
 
 async def get_menu_dates(dialog_manager: DialogManager, **kwargs):
-    """
-    Возвращает список всех доступных меню для отображения в виде списка дат.
-    """
     menus = await get_all_canteen_menu()
     return {
-        "canteen_menus": [(str(m.id), m.date.strftime("%Y-%m-%d")) for m in menus]
+        "canteen_menus": [(str(m.id), m.date.strftime("%Y-%m-%d")) for m in menus[:5]]
     }
+
 
 async def get_selected_menu(dialog_manager: DialogManager, **kwargs):
     """
@@ -66,7 +64,7 @@ async def get_selected_menu(dialog_manager: DialogManager, **kwargs):
     if not menu:
         return {"content": "", "formatted_date": ""}
     return {
-        "content": menu.menu or "—",
+        "content": menu.menu or "-",
         "formatted_date": menu.date.strftime("%Y-%m-%d"),
     }
 
@@ -92,7 +90,7 @@ async def on_edit_start_time(message: Message, value: TextInput, dialog_manager:
     await update_canteen_info(start=time, end=None, description=None)
     await message.answer("✏️ Время начала работы столовой обновлено.")
     logger.info("Администратор обновил время начала работы столовой (/manage_canteen_info)")
-    await dialog_manager.done()
+    await dialog_manager.switch_to(ManageCanteenSG.canteen_info_action)
 
 async def on_edit_end_time_start(callback: CallbackQuery, widget, dialog_manager: DialogManager, **kwargs):
     """
@@ -114,7 +112,7 @@ async def on_edit_end_time(message: Message, value: TextInput, dialog_manager: D
     await update_canteen_info(start=None, end=time, description=None)
     await message.answer("✏️ Время завершения работы столовой обновлено.")
     logger.info("Администратор обновил время авершения работы столовой (/manage_canteen_info)")
-    await dialog_manager.done()
+    await dialog_manager.switch_to(ManageCanteenSG.canteen_info_action)
 
 async def on_edit_description(message: Message, value: TextInput, dialog_manager: DialogManager, widget):
     """
@@ -123,7 +121,7 @@ async def on_edit_description(message: Message, value: TextInput, dialog_manager
     await update_canteen_info(None, None, value.get_value())
     await message.answer("✏️ Описание столовой обновлено.")
     logger.info("Администратор обновил описание столовой (/manage_canteen_info)")
-    await dialog_manager.done()
+    await dialog_manager.switch_to(ManageCanteenSG.canteen_info_action)
 
 async def on_delete_canteen_info(callback: CallbackQuery, widget, dialog_manager: DialogManager):
     """
@@ -132,7 +130,7 @@ async def on_delete_canteen_info(callback: CallbackQuery, widget, dialog_manager
     await delete_canteen_info()
     await callback.message.answer("❌ Информация о столовой удалена.")
     logger.info("Администратор удалил информацию о столовой (/manage_canteen_info)")
-    await dialog_manager.done()
+    await dialog_manager.switch_to(ManageCanteenSG.choice)
 
 async def on_select_menu(callback: CallbackQuery, widget, dialog_manager: DialogManager, selected_id: str):
     """
@@ -162,9 +160,13 @@ async def on_edit_menu_text(message: Message, input: TextInput, dialog_manager: 
     new_text = input.get_value()
     menu_id = dialog_manager.dialog_data.get("menu_id")
     await update_canteen_menu(menu_id, None, new_text, None, None)
+
+    updated_menu = await get_canteen_menu_by_id(menu_id)
+    dialog_manager.dialog_data["selected_menu"] = updated_menu
+
     await message.answer("✏️ Текст меню обновлён.")
     logger.info("Администратор обновил меню столовой (/manage_canteen_info)")
-    await dialog_manager.done()
+    await dialog_manager.switch_to(ManageCanteenSG.menu_edit_action)
 
 async def on_edit_menu_file(message: Message, widget, dialog_manager: DialogManager):
     """
@@ -185,9 +187,12 @@ async def on_edit_menu_file(message: Message, widget, dialog_manager: DialogMana
 
     menu_id = dialog_manager.dialog_data.get("menu_id")
     await update_canteen_menu(menu_id, None, None, file_id=file_id, file_type=file_type)
+    updated_menu = await get_canteen_menu_by_id(menu_id)
+    dialog_manager.dialog_data["selected_menu"] = updated_menu
+
     await message.answer("📎 Файл меню обновлён.")
     logger.info("Администратор обновил файл меню столовой (/manage_canteen_info)")
-    await dialog_manager.done()
+    await dialog_manager.switch_to(ManageCanteenSG.menu_edit_action)
 
 async def on_delete_menu_file(callback: CallbackQuery, widget, dialog_manager: DialogManager):
     """
@@ -195,8 +200,26 @@ async def on_delete_menu_file(callback: CallbackQuery, widget, dialog_manager: D
     """
     menu_id = dialog_manager.dialog_data.get("menu_id")
     await delete_canteen_menu_file(menu_id)
+    updated_menu = await get_canteen_menu_by_id(menu_id)
+    dialog_manager.dialog_data["selected_menu"] = updated_menu
+
     await callback.message.answer("🗑 Файл меню удалён.")
-    await dialog_manager.done()
+    await dialog_manager.show()
+
+
+async def on_delete_menu(callback: CallbackQuery, widget, dialog_manager: DialogManager):
+    """
+    Удаляет выбранное меню.
+    """
+    menu_id = dialog_manager.dialog_data.get("menu_id")
+    if not menu_id:
+        await callback.message.answer("❌ Меню не выбрано.")
+        return
+
+    await delete_canteen_menu(menu_id)
+    await callback.message.answer("🗑 Меню удалено.")
+    logger.info(f"Администратор удалил меню с id={menu_id} (/manage_canteen_info)")
+    await dialog_manager.switch_to(ManageCanteenSG.select_menu) 
 
     
 edit_choice_window = Window(
@@ -219,7 +242,7 @@ edit_choice_window = Window(
 canteen_info_detail_window = Window(
     Const("Выберите действие с информацией:"),
     Format("<b>Время начала работы: </b>{start_time}"),
-    Format("<b>Время завершенич работы: </b>{end_time}"),
+    Format("<b>Время завершения работы: </b>{end_time}"),
     Format("{description}"),
     Row(
         Button(
@@ -328,6 +351,8 @@ menu_edit_action_window = Window(
     ),
     Row(
         Button(Const("🗑 Удалить файл"), id="delete_file", on_click=on_delete_menu_file),
+                Button(Const("🗑 Удалить меню"), id="delete_menu", on_click=on_delete_menu),),
+    Row(
         Cancel(Const("❌ Отмена")),
         Button(Const("⬅️ Назад"), id="back", on_click=lambda c, w, d, **k: d.switch_to(ManageCanteenSG.select_menu)),
     ),

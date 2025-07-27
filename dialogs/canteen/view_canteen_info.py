@@ -11,6 +11,7 @@ from dao.canteen import (
     get_all_canteen_menu,
     get_canteen_menu_by_id,
     get_canteen_info,
+    get_canteen_menu_by_week,
 )
 from models import CanteenMenuFileType
 
@@ -27,7 +28,7 @@ async def get_canteen_menu_list(dialog_manager: DialogManager, **kwargs):
     """
     Возвращает список всех меню для отображения в Radio-кнопках.
     """
-    menus = await get_all_canteen_menu()
+    menus = await get_canteen_menu_by_week()
     return {"canteen_menus": [(str(m.id), m.date.strftime("%Y-%m-%d")) for m in menus]}
 
 async def on_menu_selected(callback: CallbackQuery, widget, manager: DialogManager, selected_id: str):
@@ -93,7 +94,7 @@ async def get_canteen_info_detail(dialog_manager: DialogManager, **kwargs):
         return {"content": "Информация о столовой пока не добавлена."}
     return {
         "content": f"⏰ Время работы: {info.start_time.strftime('%H:%M')} - {info.end_time.strftime('%H:%M')}\n\n"
-                   f"📝 Описание: {info.description or '—'}"
+                   f"📝 Описание: {info.description or '-'}"
     }
 
 

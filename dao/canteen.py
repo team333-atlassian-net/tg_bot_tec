@@ -1,4 +1,4 @@
-from datetime import time
+from datetime import time, date
 from sqlalchemy import select, asc
 from models import Canteen, CanteenMenu
 from db import async_session_maker
@@ -77,6 +77,17 @@ async def get_all_canteen_menu():
         )
         return result.scalars().all()
 
+async def get_canteen_menu_by_week():
+    today = date.today()
+
+    async with async_session_maker() as session:
+        result = await session.execute(
+            select(CanteenMenu)
+            .where(CanteenMenu.date >= today)
+            .order_by(asc(CanteenMenu.date))
+        )
+        return result.scalars().all()
+    
 async def get_canteen_menu_by_id(menu_id: int):
     async with async_session_maker() as session:
         result = await session.execute(select(CanteenMenu).where(CanteenMenu.id == menu_id))
@@ -107,4 +118,11 @@ async def delete_canteen_menu_file(menu_id: int):
         if canteen_menu:
             canteen_menu.file_id = None
             canteen_menu.file_type = None
+            await session.commit()
+
+async def delete_canteen_menu(menu_id: int):
+    async with async_session_maker() as session:
+        menu = await session.get(CanteenMenu, menu_id)
+        if menu:
+            await session.delete(menu)
             await session.commit()
