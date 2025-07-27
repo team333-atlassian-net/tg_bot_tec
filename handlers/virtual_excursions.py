@@ -22,7 +22,7 @@ async def show_virtual_excursions(message: Message, dialog_manager: DialogManage
     await dialog_manager.start(ExcursionViewSG.list, mode=StartMode.RESET_STACK)
 
 
-@router.message(Command("edit_virtual_excursions"))
+@router.message(Command("manage_virtual_excursions"))
 async def edit_virtual_excursions(message: Message, dialog_manager: DialogManager):
     user = await require_admin(message)
     if not user:

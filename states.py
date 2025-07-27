@@ -26,3 +26,29 @@ class ExcursionEditSG(StatesGroup):
     edit_material = State()
     delete_virtex = State()
     delete_material = State()
+
+
+class GuideCreationSG(StatesGroup):
+    document = State()
+    title = State()
+    upload_content = State()
+    end = State()
+
+
+class GuideViewSG(StatesGroup):
+    documents = State()
+    guides = State()
+    guide = State()
+    end = State()
+
+
+class GuideEditSG(StatesGroup):
+    documents = State()
+    guides = State()
+    guide = State()
+    edit_title = State()
+    edit_doc_name = State()
+    edit_content = State()
+    delete_doc = State()
+    delete_guide = State()
+    end = State()

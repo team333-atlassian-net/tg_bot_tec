@@ -30,6 +30,12 @@ from dialogs.canteen.add_canteen_info import add_canteen_info_dialog
 from dialogs.canteen.view_canteen_info import canteen_dialog
 from dialogs.canteen.manage_canteen_info import manage_canteen_dialog
 
+from dialogs.guides.view.dialog import dialog as guides_dialog
+from dialogs.guides.create.dialog import dialog as add_guide_dialog
+
+from dialogs.guides.edit.dialog import dialog as manage_guides_dialog
+
+
 def register_all_dialogs(dp: Dispatcher):
     setup_dialogs(dp)
     dp.include_router(login_dialog)
@@ -54,3 +60,6 @@ def register_all_dialogs(dp: Dispatcher):
     dp.include_router(add_canteen_info_dialog)
     dp.include_router(canteen_dialog)
     dp.include_router(manage_canteen_dialog)
+    dp.include_router(manage_guides_dialog)
+    dp.include_router(add_guide_dialog)
+    dp.include_router(guides_dialog)
