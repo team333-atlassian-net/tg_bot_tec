@@ -1,12 +1,9 @@
 from aiogram_dialog import setup_dialogs
 from aiogram import Dispatcher
 
-from dialogs.login import login_dialog
-from dialogs.register import register_dialog
-from dialogs.add_user import add_user_dialog
-from dialogs.admin_events import admin_event_dialog
-from dialogs.manage_events import manage_event_dialog
-from dialogs.company_info import add_company_info_dialog
+from dialogs.auth.login import login_dialog
+from dialogs.auth.register import register_dialog
+from dialogs.auth.add_user import add_user_dialog
 
 from dialogs.virtual_excursions.create.dialog import dialog as create_virtex_dialog
 from dialogs.virtual_excursions.view.dialog import dialog as virtex_dialog
@@ -33,6 +30,12 @@ from dialogs.canteen.add_canteen_info import add_canteen_info_dialog
 from dialogs.canteen.view_canteen_info import canteen_dialog
 from dialogs.canteen.manage_canteen_info import manage_canteen_dialog
 
+from dialogs.guides.view.dialog import dialog as guides_dialog
+from dialogs.guides.create.dialog import dialog as add_guide_dialog
+
+from dialogs.guides.edit.dialog import dialog as manage_guides_dialog
+
+
 def register_all_dialogs(dp: Dispatcher):
     setup_dialogs(dp)
     dp.include_router(login_dialog)
@@ -57,3 +60,6 @@ def register_all_dialogs(dp: Dispatcher):
     dp.include_router(add_canteen_info_dialog)
     dp.include_router(canteen_dialog)
     dp.include_router(manage_canteen_dialog)
+    dp.include_router(manage_guides_dialog)
+    dp.include_router(add_guide_dialog)
+    dp.include_router(guides_dialog)
