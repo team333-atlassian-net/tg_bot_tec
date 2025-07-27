@@ -43,7 +43,7 @@ async def get_company_info_details(dialog_manager: DialogManager, **kwargs):
         return {"company_info_title": "Информация не найдена", "company_info_description": ""}
     return {
         "company_info_title": company_info.title,
-        "company_info_description": company_info.content,
+        "company_info_description": company_info.content or "-",
     }
 
 
@@ -80,6 +80,7 @@ async def on_edit_title(message: Message, value: TextInput, dialog_manager: Dial
         await update_company_info(int(company_info_id), value.get_value(), None)
         await message.answer("✏️ Название обновлено.")
         logger.info("Админ обновил название (/manage_company_info)")
+        await dialog_manager.switch_to(ManageCompanyInfoSG.company_info_action)
     await dialog_manager.done()
 
 
@@ -92,6 +93,7 @@ async def on_edit_description(message: Message, value: TextInput, dialog_manager
         await update_company_info(int(company_info_id), None, value.get_value())
         await message.answer("📝 Описание обновлено.")
         logger.info("Админ обновил описание (/manage_company_info)")
+        await dialog_manager.switch_to(ManageCompanyInfoSG.company_info_action)
     await dialog_manager.done()
 
 async def on_file_edit(message: Message, widget, dialog_manager: DialogManager):
@@ -107,7 +109,7 @@ async def on_file_edit(message: Message, widget, dialog_manager: DialogManager):
         await update_company_info(int(company_info_id), None, None, file_id=file_id)
         await message.answer("📎 Файл обновлён.")
         logger.info("Админ обновил файл (/manage_company_info)")
-        await dialog_manager.done()
+        await dialog_manager.switch_to(ManageCompanyInfoSG.company_info_action)
     else:
         await message.answer("❌ Пожалуйста, отправьте документ.")
 
@@ -126,7 +128,7 @@ async def on_image_edit(message: Message, widget, dialog_manager: DialogManager)
         await update_company_info(int(company_info_id), None, None, None, image_id=image_id)
         await message.answer("📎 Изображение обновлено.")
         logger.info("Админ обновил фото (/manage_company_info)")
-        await dialog_manager.done()
+        await dialog_manager.switch_to(ManageCompanyInfoSG.company_info_action)
     else:
         await message.answer("❌ Пожалуйста, отправьте изображение.")
 
@@ -140,6 +142,8 @@ async def on_delete_company_info(callback: CallbackQuery, widget, dialog_manager
         await delete_company_info(int(company_info_id))
         await callback.message.answer("✅ Информация удалена.")
         logger.info("Администратор удалил информацию о компании (/manage_company_info)")
+        await dialog_manager.switch_to(ManageCompanyInfoSG.list)
+        
     await dialog_manager.done()
 
 
@@ -187,6 +191,7 @@ company_info_detail_window = Window(
     ),
     Button(Const("🗑 Удалить"), id="delete", on_click=on_delete_company_info),
     Button(Const("⬅️ Назад"), id="back", on_click=lambda c, w, d, **k: d.switch_to(ManageCompanyInfoSG.list)),
+    Cancel(Const("❌ Выйти"), id="exit_editing", on_click=on_exit),
     state=ManageCompanyInfoSG.company_info_action,
     getter=get_company_info_details,
 )
@@ -196,7 +201,10 @@ edit_title_window = Window(
     Const("Редактирование названия мероприятия:"),
     Format("Вы хотите изменить название: \n<b>{company_info_title}</b>"),
     TextInput("edit_title", on_success=on_edit_title),
-    Cancel(Const("❌ Отмена")),
+    Row(
+        Button(Const("⬅️ Назад"), id="back", on_click=lambda c, w, d, **k: d.switch_to(ManageCompanyInfoSG.company_info_action)),
+        Cancel(Const("❌ Отмена")),
+    ),
     state=ManageCompanyInfoSG.edit_title,
     getter=get_company_info_details,
 )
@@ -207,7 +215,10 @@ edit_description_window = Window(
     Format("<b>{company_info_title}</b>"),
     Format("Вы хотите изменить описание: \n{company_info_description}"),
     TextInput("edit_desc", on_success=on_edit_description),
-    Cancel(Const("❌ Отмена")),
+    Row(
+        Button(Const("⬅️ Назад"), id="back", on_click=lambda c, w, d, **k: d.switch_to(ManageCompanyInfoSG.company_info_action)),
+        Cancel(Const("❌ Отмена")),
+    ),
     state=ManageCompanyInfoSG.edit_description,
     getter=get_company_info_details,
 )
@@ -216,7 +227,10 @@ edit_description_window = Window(
 edit_file_window = Window(
     Const("📎 Отправьте новый файл (только документ):"),
     MessageInput(on_file_edit),
-    Cancel(Const("❌ Отмена")),
+    Row(
+        Button(Const("⬅️ Назад"), id="back", on_click=lambda c, w, d, **k: d.switch_to(ManageCompanyInfoSG.company_info_action)),
+        Cancel(Const("❌ Отмена")),
+    ),
     state=ManageCompanyInfoSG.edit_file,
     getter=get_company_info_details,
 )
@@ -224,7 +238,10 @@ edit_file_window = Window(
 edit_image_window = Window(
     Const("📎 Отправьте новое изображение:"),
     MessageInput(on_image_edit),
-    Cancel(Const("❌ Отмена")),
+    Row(
+        Button(Const("⬅️ Назад"), id="back", on_click=lambda c, w, d, **k: d.switch_to(ManageCompanyInfoSG.company_info_action)),
+        Cancel(Const("❌ Отмена")),
+    ),
     state=ManageCompanyInfoSG.edit_image,
     getter=get_company_info_details,
 )

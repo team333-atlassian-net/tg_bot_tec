@@ -63,7 +63,7 @@ async def on_category_entered(message: Message, widget: TextInput, dialog_manage
     Иначе сохраняет введенную категорию и переходит к вводу ключевых слов.
     """
     text = message.text.strip().lower()
-    dialog_manager.dialog_data["category"] = None if text in ("нет", "пропустить") else message.text
+    dialog_manager.dialog_data["category"] = "-" if text in ("нет", "пропустить") else message.text
     await dialog_manager.switch_to(AddFAQSG.keywords)
 
 async def on_keywords_entered(message: Message, widget: TextInput, dialog_manager: DialogManager):
@@ -93,6 +93,8 @@ async def on_manual_confirm(callback: CallbackQuery, widget, dialog_manager: Dia
     Завершает диалог.
     """
     data = dialog_manager.dialog_data
+    if data["category"] == "-":
+        data["category"] = None
     await add_faq_with_keywords(
         question=data["question"],
         answer=data["answer"],
@@ -169,24 +171,40 @@ method_window = Window(
 question_window = Window(
     Const("Введите вопрос:"),
     MessageInput(on_question_entered),
+    Row(
+        Back(Const("⬅️ Назад")),
+        Cancel(Const("❌ Отмена")),
+    ),
     state=AddFAQSG.question,
 )
 
 answer_window = Window(
     Const("Введите ответ:"),
     MessageInput(on_answer_entered),
+    Row(
+        Back(Const("⬅️ Назад")),
+        Cancel(Const("❌ Отмена")),
+    ),
     state=AddFAQSG.answer,
 )
 
 category_window = Window(
     Const("Введите категорию (или напишите 'нет'):"),
     MessageInput(on_category_entered),
+    Row(
+        Back(Const("⬅️ Назад")),
+        Cancel(Const("❌ Отмена")),
+    ),
     state=AddFAQSG.category,
 )
 
 keywords_window = Window(
     Const("Введите ключевые слова через запятую:"),
     MessageInput(on_keywords_entered),
+    Row(
+        Back(Const("⬅️ Назад")),
+        Cancel(Const("❌ Отмена")),
+    ),
     state=AddFAQSG.keywords,
 )
 
@@ -209,7 +227,10 @@ confirm_window = Window(
 upload_excel_window = Window(
     Const("📄 Пришлите Excel-файл (.xlsx) с колонками: question, answer, keywords, category (опц.)"),
     MessageInput(on_excel_uploaded, content_types=["document"]),
+    Row(
+    Button(Const("⬅️ Назад"), id="back", on_click=lambda c, w, d, **k: d.switch_to(AddFAQSG.method)),       
     Cancel(Const("❌ Отмена")),
+    ),
     state=AddFAQSG.upload_excel,
 )
 

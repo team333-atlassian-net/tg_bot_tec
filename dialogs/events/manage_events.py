@@ -45,7 +45,7 @@ async def get_event_details(dialog_manager: DialogManager, **kwargs):
         return {"event_title": "Мероприятие не найдено", "event_description": ""}
     return {
         "event_title": event.title,
-        "event_description": event.description,
+        "event_description": event.description or "-",
     }
 
 
@@ -82,6 +82,7 @@ async def on_edit_title(message: Message, value: TextInput, dialog_manager: Dial
         await update_event(int(event_id), value.get_value(), None)
         await message.answer("✏️ Название обновлено.")
         logger.info("Админ обновил название (/manage_events)")
+        await dialog_manager.switch_to(ManageEventSG.event_action)
     await dialog_manager.done()
 
 
@@ -94,6 +95,7 @@ async def on_edit_description(message: Message, value: TextInput, dialog_manager
         await update_event(int(event_id), None, value.get_value())
         await message.answer("📝 Описание обновлено.")
         logger.info("Админ обновил описание (/manage_events)")
+        await dialog_manager.switch_to(ManageEventSG.event_action)
     await dialog_manager.done()
 
 
@@ -106,6 +108,7 @@ async def on_delete_event(callback: CallbackQuery, widget, dialog_manager: Dialo
         await delete_event(int(event_id))
         await callback.message.answer("✅ Мероприятие удалено.")
         logger.info("Администратор удалил мероприятие (/manage_events)")
+        await dialog_manager.switch_to(ManageEventSG.list)
     await dialog_manager.done()
 
 
@@ -157,7 +160,10 @@ edit_title_window = Window(
     Const("Редактирование названия мероприятия:"),
     Format("Вы хотите изменить название: \n<b>{event_title}</b>"),
     TextInput("edit_title", on_success=on_edit_title),
-    Cancel(Const("❌ Отмена")),
+    Row(
+        Button(Const("⬅️ Назад"), id="back", on_click=lambda c, w, d, **k: d.switch_to(ManageEventSG.event_action)),
+        Cancel(Const("❌ Отмена")),
+    ),
     state=ManageEventSG.edit_title,
     getter=get_event_details,
 )
@@ -168,7 +174,10 @@ edit_description_window = Window(
     Format("<b>{event_title}</b>"),
     Format("Вы хотите изменить описание: \n{event_description}"),
     TextInput("edit_desc", on_success=on_edit_description),
-    Cancel(Const("❌ Отмена")),
+    Row(
+        Button(Const("⬅️ Назад"), id="back", on_click=lambda c, w, d, **k: d.switch_to(ManageEventSG.event_action)),
+        Cancel(Const("❌ Отмена")),
+    ),
     state=ManageEventSG.edit_description,
     getter=get_event_details,
 )
