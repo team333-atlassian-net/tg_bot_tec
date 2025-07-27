@@ -36,8 +36,7 @@ async def get_structure_detail(dialog_manager: DialogManager, **kwargs):
         structure = await get_org_structure_by_id(int(structure_id))
         dialog_manager.dialog_data["structure"] = structure
 
-    content = structure.content if structure and structure.content else ""
-    return {"structure": structure, "content": content}
+    return {"structure": structure, "content": structure.content or "-"}
 
 
 async def on_structure_selected(callback: CallbackQuery, widget, manager: DialogManager, selected_id: str):

@@ -43,7 +43,7 @@ async def get_org_structure_details(dialog_manager: DialogManager, **kwargs):
         return {"org_structure_title": "Информация не найдена", "org_structure_description": ""}
     return {
         "org_structure_title": org_structure.title,
-        "org_structure_description": org_structure.content,
+        "org_structure_description": org_structure.content or "-",
     }
 
 
@@ -80,7 +80,7 @@ async def on_edit_title(message: Message, value: TextInput, dialog_manager: Dial
         await update_org_structure(int(org_structure_id), value.get_value(), None)
         await message.answer("✏️ Название обновлено.")
         logger.info("Админ обновил название (/manage_org_structures)")
-    await dialog_manager.done()
+    await dialog_manager.switch_to(ManageOrgStructureSG.org_structure_action)
 
 
 async def on_edit_description(message: Message, value: TextInput, dialog_manager: DialogManager, widget):
@@ -92,7 +92,7 @@ async def on_edit_description(message: Message, value: TextInput, dialog_manager
         await update_org_structure(int(org_structure_id), None, value.get_value())
         await message.answer("📝 Описание обновлено.")
         logger.info("Админ обновил описание (/manage_org_structures)")
-    await dialog_manager.done()
+    await dialog_manager.switch_to(ManageOrgStructureSG.org_structure_action)
 
 async def on_edit_file(message: Message, widget, dialog_manager: DialogManager):
     """
@@ -107,7 +107,7 @@ async def on_edit_file(message: Message, widget, dialog_manager: DialogManager):
         await update_org_structure(int(org_structure_id), None, None, file_id=file_id)
         await message.answer("📎 Файл обновлён.")
         logger.info("Админ обновил файл (/manage_org_structures)")
-        await dialog_manager.done()
+        await dialog_manager.switch_to(ManageOrgStructureSG.org_structure_action)
     else:
         await message.answer("❌ Пожалуйста, отправьте документ.")
 
@@ -118,9 +118,9 @@ async def on_delete_org_structure(callback: CallbackQuery, widget, dialog_manage
     org_structure_id = dialog_manager.dialog_data.get("org_structure_id")
     if org_structure_id:
         await delete_org_structure(int(org_structure_id))
-        await callback.message.answer("✅ Мероприятие удалено.")
+        await callback.message.answer("✅ Раздел организационной структур удален.")
         logger.info("Администратор удалил мероприятие (/manage_org_structures)")
-    await dialog_manager.done()
+    await dialog_manager.switch_to(ManageOrgStructureSG.list)
 
 
 async def on_exit(callback: CallbackQuery, widget, dialog_manager: DialogManager, **kwargs):
