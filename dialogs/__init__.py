@@ -1,12 +1,9 @@
 from aiogram_dialog import setup_dialogs
 from aiogram import Dispatcher
 
-from dialogs.login import login_dialog
-from dialogs.register import register_dialog
-from dialogs.add_user import add_user_dialog
-from dialogs.admin_events import admin_event_dialog
-from dialogs.manage_events import manage_event_dialog
-from dialogs.company_info import add_company_info_dialog
+from dialogs.auth.login import login_dialog
+from dialogs.auth.register import register_dialog
+from dialogs.auth.add_user import add_user_dialog
 
 from dialogs.virtual_excursions.create.dialog import dialog as create_virtex_dialog
 from dialogs.virtual_excursions.view.dialog import dialog as virtex_dialog
