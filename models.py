@@ -78,8 +78,30 @@ class Feedback(Base):
 
     id = Column(Integer, primary_key=True)
     user_id = Column(UUID, ForeignKey("users.id"))
-    text = Column(Text)
-    is_anonymous = Column(Boolean)
+    text = Column(Text, nullable=False)
+    is_read = Column(Boolean, default=False)
+
+    attachments = relationship(
+        "FeedbackAttachments", back_populates="feedback", cascade="all, delete-orphan"
+    )
+
+
+class FeedbackAttachments(Base):
+    """Вложения к отзыву о боте"""
+
+    __tablename__ = "feedback_attachments"
+
+    id = Column(Integer, primary_key=True)
+    feedback_id = Column(
+        Integer,
+        ForeignKey("feedback.id", ondelete="CASCADE"),
+        nullable=False,
+    )
+    file_id = Column(Text)
+
+    feedback = relationship(
+        "Feedback", back_populates="attachments", passive_deletes=True
+    )
 
 
 class RegistrationRequest(Base):

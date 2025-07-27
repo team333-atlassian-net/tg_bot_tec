@@ -32,8 +32,10 @@ from dialogs.canteen.manage_canteen_info import manage_canteen_dialog
 
 from dialogs.guides.view.dialog import dialog as guides_dialog
 from dialogs.guides.create.dialog import dialog as add_guide_dialog
-
 from dialogs.guides.edit.dialog import dialog as manage_guides_dialog
+
+from dialogs.feedback.user.dialog import dialog as user_feedback_dialog
+from dialogs.feedback.admin.dialog import dialog as admin_feedback_dialog
 
 
 def register_all_dialogs(dp: Dispatcher):
@@ -63,3 +65,5 @@ def register_all_dialogs(dp: Dispatcher):
     dp.include_router(manage_guides_dialog)
     dp.include_router(add_guide_dialog)
     dp.include_router(guides_dialog)
+    dp.include_router(admin_feedback_dialog)
+    dp.include_router(user_feedback_dialog)

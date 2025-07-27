@@ -54,6 +54,7 @@ guides_list_window = Window(
             items="guides",
             on_click=on_guide_select,
         ),
+        id="scroll_guides",
     ),
     Row(Back(Const("⬅️ Назад")), Cancel(Const("❌ Закрыть"))),
     Group(
