@@ -1,7 +1,7 @@
 import asyncio
 from datetime import date, time
 from db import async_session_maker
-from sqlalchemy import select
+from sqlalchemy import select, func
 from models import FAQ, Canteen, CanteenMenu, CompanyInfo, ExcursionMaterial, FAQKeyWords, Event, Guide, OrganizationalStructure, VirtualExcursion
 # from models import Feedback, FeedbackAttachments
 
@@ -10,6 +10,11 @@ from models import FAQ, Canteen, CanteenMenu, CompanyInfo, ExcursionMaterial, FA
 
 async def add_faq_data():
     async with async_session_maker() as session:
+        count = await session.scalar(select(func.count()).select_from(FAQ))
+        if count > 0:
+            print("FAQ уже заполнены — пропуск")
+            return
+        
         faqs = [
             {
                 "question": "Как оформить отпуск?",
@@ -49,6 +54,11 @@ async def add_faq_data():
 
 async def add_events_data():
     async with async_session_maker() as session:
+        count = await session.scalar(select(func.count()).select_from(Event))
+        if count > 0:
+            print("Мероприятия уже заполнены — пропуск")
+            return
+        
         events = [
             {
                 "title": "День открытых дверей",
@@ -80,12 +90,24 @@ async def add_events_data():
 
 async def add_canteen_info():
     async with async_session_maker() as session:
+        count = await session.scalar(select(func.count()).select_from(Canteen))
+
+        if count > 0:
+            print("Информация о столовой уже заполнена — пропуск")
+            return
         canteen = Canteen(
             start_time=time(8, 0),         
             end_time=time(18, 0),         
             description="Столовая работает в будни. Оплата по карте или QR."
         )
+        session.add(canteen)
 
+        count_menu = await session.scalar(select(func.count()).select_from(CanteenMenu))
+        if count > 0:
+            count_menu("Меню уже заполнено — пропуск")
+            await session.commit()
+            return
+        
         canteen_menu = [
             {
                 "date": date(2025, 8, 1),
@@ -109,7 +131,6 @@ async def add_canteen_info():
                 menu=menu["menu"]
             )
             session.add(cm)
-        session.add(canteen)
         await session.commit()
         print("Данные о столовой добавлены")
 
@@ -118,6 +139,10 @@ async def add_canteen_info():
 
 async def add_company_info():
     async with async_session_maker() as session:
+        count = await session.scalar(select(func.count()).select_from(CompanyInfo))
+        if count > 0:
+            print("Информация о компании уже заполнена — пропуск")
+            return
         company_info = [
             {
                 "title": "Мы - компания ТЭК",
@@ -154,6 +179,11 @@ async def add_company_info():
 
 # async def add_feedback_data():
 #     async with async_session_maker() as session:
+        # count = await session.scalar(select(func.count()).select_from(Feedback))
+
+        # if count > 0:
+        #     print("Экскурсии уже заполнены — пропуск")
+        #     return
 #         user_id = await session.scalar(
 #             select(User).where(User.pin_code == "12345")
 #         )
@@ -186,6 +216,12 @@ async def add_company_info():
 
 async def add_virtex_data():
     async with async_session_maker() as session:
+        count = await session.scalar(select(func.count()).select_from(VirtualExcursion))
+
+        if count > 0:
+            print("Экскурсии уже заполнены — пропуск")
+            return
+        
         excursion1 = VirtualExcursion(
             title="Виртуальная экскурсия по офису",
             description="Познакомьтесь с офисом и инфраструктурой компании."
@@ -229,6 +265,10 @@ async def add_virtex_data():
 
 async def add_org_structure():
     async with async_session_maker() as session:
+        count = await session.scalar(select(func.count()).select_from(OrganizationalStructure))
+        if count > 0:
+            print("Оргструктура уже заполнена — пропуск")
+            return
         org_structure = OrganizationalStructure(
             title="Структура компании",         
             content="Описание организационной структуры компании: отделы, подразделения, руководство.",         
@@ -240,6 +280,10 @@ async def add_org_structure():
 
 async def add_guides_data():
     async with async_session_maker() as session:
+        count = await session.scalar(select(func.count()).select_from(Guide))
+        if count > 0:
+            print("Гайды уже заполнены — пропуск")
+            return
         guides = [
             {
                 "document": "Заявление на отпуск",
