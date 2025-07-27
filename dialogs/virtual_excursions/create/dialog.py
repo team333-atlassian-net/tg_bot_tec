@@ -13,7 +13,6 @@ from aiogram_dialog.widgets.kbd import (
 )
 from aiogram_dialog.widgets.text import Const, Format
 from aiogram.enums import ContentType
-from aiogram.enums import ContentType
 from states import ExcursionCreationSG
 from dialogs.virtual_excursions.create.handlers import *
 

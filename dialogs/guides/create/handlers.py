@@ -2,7 +2,6 @@ import logging
 from aiogram_dialog.widgets.input import TextInput, MessageInput
 from aiogram_dialog.api.protocols import DialogManager
 from aiogram.types import Message, CallbackQuery
-from aiogram_dialog.widgets.input import MessageInput
 from aiogram_dialog.widgets.kbd import (
     Button,
     Select,

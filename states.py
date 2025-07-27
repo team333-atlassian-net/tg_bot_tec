@@ -52,3 +52,16 @@ class GuideEditSG(StatesGroup):
     delete_doc = State()
     delete_guide = State()
     end = State()
+
+
+class FeedbackUserSG(StatesGroup):
+    text = State()
+    attachment = State()
+    end = State()
+
+
+class FeedbackAdminSG(StatesGroup):
+    feedback_list = State()
+    feedback_detail = State()
+    attachment = State()
+    delete = State()

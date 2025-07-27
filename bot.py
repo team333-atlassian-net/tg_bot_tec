@@ -26,8 +26,9 @@ from handlers.organizational_structure import router as org_structure_router
 from handlers.faq import router as faq_router
 from handlers.canteen import router as canteen_router
 from handlers.guides import router as guides_router
+from handlers.feedback import router as feedback_router
 
-configure_logging()
+# configure_logging()
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
@@ -52,6 +53,7 @@ dp.include_router(org_structure_router)
 dp.include_router(faq_router)
 dp.include_router(canteen_router)
 dp.include_router(guides_router)
+dp.include_router(feedback_router)
 
 
 @dp.message(Command("start"))
@@ -87,7 +89,8 @@ async def help_handler(message: Message):
             "/manage_faq — Управление часто задаваемыми вопросами\n"
             "/add_canteen_info — Добавить информацию по столовой или меню\n"
             "/add_guide — Добавить инструкцию по оформлению документа\n"
-            "/manage_guides — Управление инструкциями по оформлению документов\n\n"
+            "/manage_guides — Управление инструкциями по оформлению документов\n"
+            "/manage_feedback — Управление обратной связью\n\n"
             "📌 <b>Общие команды:</b>\n\n"
             "/start — Начать взаимодействие с ботом\n"
             "/login — Авторизация по ПИН-коду\n"
@@ -104,6 +107,7 @@ async def help_handler(message: Message):
             "/faq — Показать часто задаваемые вопросы\n"
             "/search_faq — Поиск по вопросам\n"
             "/canteen — Показать информацию по столовой или меню\n"
+            "/feedback — Обратная связь\n"
         )
     else:  # Команды для обычного пользователя
         help_text = (
@@ -124,6 +128,7 @@ async def help_handler(message: Message):
             "/search_faq — Поиск по вопросам\n"
             "/canteen — Показать информацию по столовой или меню\n"
             "/guides — Показать инструкции по оформлению документов\n"
+            "/feedback — Обратная связь\n"
         )
 
     await message.answer(help_text)
