@@ -220,3 +220,50 @@ class OrgStructureViewSG(StatesGroup):
 
     list = State()
     detail = State()
+
+
+class AddFAQSG(StatesGroup):
+    """
+    Состояния для диалога добавления FAQ
+    """
+
+    method = State()
+    question = State()
+    answer = State()
+    category = State()
+    keywords = State()
+    confirm = State()
+    upload_excel = State()
+
+
+class ManageFAQSQ(StatesGroup):
+    """Состояния для управления FAQ"""
+
+    list = State()
+    faq_action = State()
+    edit_question = State()
+    edit_answer = State()
+    edit_category = State()
+    edit_keywords = State()
+
+
+class FAQSearchSG(StatesGroup):
+    """
+    Состояния для диалога поиска FAQ
+    """
+
+    search_input = State()
+    search_results = State()
+    detail = State()
+
+
+class FAQViewSG(StatesGroup):
+    """
+    Состояния для диалога FAQ
+    """
+
+    menu = State()
+    list_all = State()
+    category_select = State()
+    category_questions = State()
+    detail = State()

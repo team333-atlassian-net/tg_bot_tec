@@ -21,10 +21,10 @@ from dialogs.company_info.create.dialog import dialog as create_company_info_dia
 from dialogs.company_info.view.dialog import dialog as company_info_dialog
 from dialogs.company_info.edit.dialog import dialog as manage_company_info_dialog
 
-from dialogs.faq.add_faq import add_faq_dialog
-from dialogs.faq.view_faq import faq_dialog
-from dialogs.faq.search_faq import faq_search_dialog
-from dialogs.faq.manage_faq import manage_faq_dialog
+from dialogs.faq.create.dialog import dialog as add_faq_dialog
+from dialogs.faq.view.dialog import dialog as faq_dialog
+from dialogs.faq.search.dialog import dialog as faq_search_dialog
+from dialogs.faq.edit.dialog import dialog as manage_faq_dialog
 
 from dialogs.canteen.create.dialog import dialog as add_canteen_info_dialog
 from dialogs.canteen.view.dialog import dialog as canteen_dialog
