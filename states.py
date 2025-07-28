@@ -192,3 +192,31 @@ class EventsViewSG(StatesGroup):
 
     list = State()
     detail = State()
+
+
+class OrgStructureCreationSG(StatesGroup):
+    """
+    Состояния для диалога создания новой организационной структуры.
+    """
+
+    title = State()
+    description = State()
+    file = State()
+    confirm = State()
+
+
+class ManageOrgStructureSG(StatesGroup):
+    list = State()
+    org_structure_action = State()
+    edit_title = State()
+    edit_description = State()
+    edit_file = State()
+
+
+class OrgStructureViewSG(StatesGroup):
+    """
+    Состояния для просмотра организационной структуры.
+    """
+
+    list = State()
+    detail = State()

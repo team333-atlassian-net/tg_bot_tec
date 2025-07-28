@@ -13,9 +13,9 @@ from dialogs.events.view.dialog import dialog as view_event_dialog
 from dialogs.events.edit.dialog import dialog as manage_event_dialog
 from dialogs.events.create.dialog import dialog as create_event_dialog
 
-from dialogs.org_structure.add_org_structure import create_org_structure_dialog
-from dialogs.org_structure.view_org_structure import org_structure_dialog
-from dialogs.org_structure.manage_org_structure import manage_org_structure_dialog
+from dialogs.org_structure.create.dialog import dialog as create_org_structure_dialog
+from dialogs.org_structure.view.dialog import dialog as org_structure_dialog
+from dialogs.org_structure.edit.dialog import dialog as manage_org_structure_dialog
 
 from dialogs.company_info.create.dialog import dialog as create_company_info_dialog
 from dialogs.company_info.view.dialog import dialog as company_info_dialog
