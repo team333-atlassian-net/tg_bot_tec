@@ -117,3 +117,12 @@ async def update_request_status(request_id, status):
             req.status = status
             session.add(req)
             await session.commit()
+
+async def delete_tg_id(tg_id: int):
+    async with async_session_maker() as session:
+        result = await session.execute(select(User).where(User.tg_id == tg_id))
+        user = result.scalar_one_or_none()
+
+        if user:
+            user.tg_id = None
+            await session.commit()
