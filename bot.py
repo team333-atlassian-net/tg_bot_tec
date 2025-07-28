@@ -12,7 +12,6 @@ from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram_dialog import setup_dialogs
 
 from config import settings
-from logger import configure_logging
 from utils.auth import require_auth
 from dialogs import register_all_dialogs
 from handlers.login import router as login_router
@@ -27,8 +26,6 @@ from handlers.faq import router as faq_router
 from handlers.canteen import router as canteen_router
 from handlers.guides import router as guides_router
 from handlers.feedback import router as feedback_router
-
-# configure_logging()
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
@@ -96,6 +93,7 @@ async def help_handler(message: Message):
             "/login — Авторизация по ПИН-коду\n"
             "/register — Регистрация в системе\n"
             "/help — Показать это справочное сообщение\n"
+            "/logout — Выйти из аккаунта\n"
             "/events — Показать список всех корпоративных мероприятий\n"
             "/company_info — Показать информацию о компании\n"
             "/virtual_excursions — Показать список виртуальных экскурсий\n"
@@ -113,6 +111,7 @@ async def help_handler(message: Message):
             "/login — Авторизация по ПИН-коду\n"
             "/register — Регистрация в системе\n"
             "/help — Показать это справочное сообщение\n"
+            "/logout — Выйти из аккаунта\n"
             "/events — Показать список всех корпоративных мероприятий\n"
             "/company_info — Показать информацию о компании\n"
             "/virtual_excursions — Показать список виртуальных экскурсий\n"
