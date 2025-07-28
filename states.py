@@ -10,6 +10,12 @@ class AddUserSG(StatesGroup):
     upload_excel = State()
 
 
+class AuthDialogSG(StatesGroup):
+    """Класс состояния для авторизации"""
+
+    enter_pin = State()
+
+
 class ExcursionCreationSG(StatesGroup):
     title = State()
     description = State()
