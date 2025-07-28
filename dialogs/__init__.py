@@ -26,9 +26,9 @@ from dialogs.faq.view_faq import faq_dialog
 from dialogs.faq.search_faq import faq_search_dialog
 from dialogs.faq.manage_faq import manage_faq_dialog
 
-from dialogs.canteen.add_canteen_info import add_canteen_info_dialog
-from dialogs.canteen.view_canteen_info import canteen_dialog
-from dialogs.canteen.manage_canteen_info import manage_canteen_dialog
+from dialogs.canteen.create.dialog import dialog as add_canteen_info_dialog
+from dialogs.canteen.view.dialog import dialog as canteen_dialog
+from dialogs.canteen.edit.dialog import dialog as manage_canteen_dialog
 
 from dialogs.guides.view.dialog import dialog as guides_dialog
 from dialogs.guides.create.dialog import dialog as add_guide_dialog

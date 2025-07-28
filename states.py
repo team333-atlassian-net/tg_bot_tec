@@ -27,6 +27,55 @@ class RegisterDialogSG(StatesGroup):
     confirm = State()
 
 
+class CanteenInfoCreationSG(StatesGroup):
+    """Состояния для диалога добавления информации о столовой и меню."""
+
+    choice = State()
+
+    # Состояния для столовой
+    start_time = State()
+    end_time = State()
+    description = State()
+    confirm_canteen = State()
+
+    # Состояния для меню
+    menu_date = State()
+    menu_text = State()
+    menu_file = State()
+    confirm_menu = State()
+
+
+class ManageCanteenSG(StatesGroup):
+    """
+    Состояния для управления меню и информацией о столовой.
+    """
+
+    choice = State()
+    select_menu = State()
+    menu_edit_action = State()
+    edit_menu_text = State()
+    edit_menu_file = State()
+    confirm_menu_edit = State()
+    confirm_info = State()
+
+    edit_canteen_info = State()
+    canteen_info_action = State()
+    edit_info = State()
+    edit_description = State()
+    edit_start_time = State()
+    edit_end_time = State()
+
+
+class CanteenViewSG(StatesGroup):
+    """Состояния диалога просмотра столовой и меню"""
+
+    start = State()
+    menu_list = State()
+    menu_detail = State()
+    calendar = State()
+    info = State()
+
+
 class ExcursionCreationSG(StatesGroup):
     title = State()
     description = State()
