@@ -1,6 +1,15 @@
 from aiogram.fsm.state import State, StatesGroup
 
 
+class AddUserSG(StatesGroup):
+    method = State()
+    first_name = State()
+    last_name = State()
+    middle_name = State()
+    confirm = State()
+    upload_excel = State()
+
+
 class ExcursionCreationSG(StatesGroup):
     title = State()
     description = State()
