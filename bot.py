@@ -13,6 +13,10 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from config import settings
 from dialogs import get_dialogs
 from handlers.start import router as start_router
+from utils.auth import require_auth
+from handlers.login import router as login_router
+from handlers.register import router as register_router
+from handlers.request_register_callbacks import router as register_request_router
 from handlers.add_user import router as add_users_router
 from handlers.canteen import router as canteen_router
 from handlers.company_info import router as company_info_router
@@ -26,8 +30,6 @@ from handlers.register import router as register_router
 from handlers.request_register_callbacks import router as register_request_router
 from handlers.virtual_excursions import router as virtual_excursion_router
 from utils.auth import require_auth
-
-# configure_logging()
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
@@ -130,7 +132,6 @@ setup_dialogs(dp)
 #         )
 #
 #     await message.answer(help_text)
-
 
 async def main():
     await dp.start_polling(bot)
