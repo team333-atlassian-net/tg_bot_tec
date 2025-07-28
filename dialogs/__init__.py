@@ -9,9 +9,9 @@ from dialogs.virtual_excursions.create.dialog import dialog as create_virtex_dia
 from dialogs.virtual_excursions.view.dialog import dialog as virtex_dialog
 from dialogs.virtual_excursions.edit.dialog import dialog as edit_virtex_dialog
 
-from dialogs.events.view_events import view_event_dialog
-from dialogs.events.manage_events import manage_event_dialog
-from dialogs.events.add_event import create_event_dialog
+from dialogs.events.view.dialog import dialog as view_event_dialog
+from dialogs.events.edit.dialog import dialog as manage_event_dialog
+from dialogs.events.create.dialog import dialog as create_event_dialog
 
 from dialogs.org_structure.add_org_structure import create_org_structure_dialog
 from dialogs.org_structure.view_org_structure import org_structure_dialog

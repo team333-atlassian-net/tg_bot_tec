@@ -170,3 +170,25 @@ class CompanyInfoViewSG(StatesGroup):
 
     list = State()
     detail = State()
+
+
+class EventCreationSG(StatesGroup):
+    title = State()
+    description = State()
+    confirm = State()
+
+
+class ManageEventSG(StatesGroup):
+    list = State()
+    event_action = State()
+    edit_title = State()
+    edit_description = State()
+
+
+class EventsViewSG(StatesGroup):
+    """
+    Состояния диалога просмотра мероприятий.
+    """
+
+    list = State()
+    detail = State()
