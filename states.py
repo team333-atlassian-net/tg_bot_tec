@@ -1,6 +1,23 @@
 from aiogram.fsm.state import State, StatesGroup
 
 
+class StartSG(StatesGroup):
+    start = State()
+
+
+class MenuSG(StatesGroup):
+    menu = State()
+    auth = State()
+    company_info = State()
+    org_structure = State()
+    events = State()
+    guides = State()
+    virtexs = State()
+    canteen = State()
+    feedback = State()
+    faq = State()
+
+
 class AddUserSG(StatesGroup):
     method = State()
     first_name = State()
@@ -25,6 +42,169 @@ class RegisterDialogSG(StatesGroup):
     last = State()
     middle = State()
     confirm = State()
+
+
+class CompanyInfoCreationSG(StatesGroup):
+    """
+    Состояния для диалога создания новой информации о компании.
+    """
+
+    title = State()
+    description = State()
+    file = State()
+    image = State()
+    confirm = State()
+
+
+class ManageCompanyInfoSG(StatesGroup):
+    """
+    Состояния для диалога редактирования информации о компании.
+    """
+    list = State()
+    company_info_action = State()
+    edit_title = State()
+    edit_description = State()
+    edit_file = State()
+    edit_image = State()
+
+
+class CompanyInfoViewSG(StatesGroup):
+    """
+    Состояния для просмотра информации о компании
+    """
+
+    list = State()
+    detail = State()
+
+
+class OrgStructureCreationSG(StatesGroup):
+    """
+    Состояния для диалога создания новой организационной структуры.
+    """
+
+    title = State()
+    description = State()
+    file = State()
+    confirm = State()
+
+
+class ManageOrgStructureSG(StatesGroup):
+    """
+    Состояния для управления организационной структурой.
+    """
+    list = State()
+    org_structure_action = State()
+    edit_title = State()
+    edit_description = State()
+    edit_file = State()
+
+
+class OrgStructureViewSG(StatesGroup):
+    """
+    Состояния для просмотра организационной структуры.
+    """
+
+    list = State()
+    detail = State()
+
+
+class EventCreationSG(StatesGroup):
+    """
+    Состояния диалога добавления мероприятий.
+    """
+    title = State()
+    description = State()
+    confirm = State()
+
+
+class ManageEventSG(StatesGroup):
+    """
+    Состояния диалога управления мероприятиями.
+    """
+    list = State()
+    event_action = State()
+    edit_title = State()
+    edit_description = State()
+
+
+class EventsViewSG(StatesGroup):
+    """
+    Состояния диалога просмотра мероприятий.
+    """
+
+    list = State()
+    detail = State()
+
+
+class GuideCreationSG(StatesGroup):
+    """
+    Состояния диалога создания инструкций.
+    """
+    document = State()
+    title = State()
+    upload_content = State()
+    end = State()
+
+
+class GuideViewSG(StatesGroup):
+    """
+    Состояния диалога просмотра инструкций.
+    """
+    documents = State()
+    guides = State()
+    guide = State()
+    end = State()
+
+
+class GuideEditSG(StatesGroup):
+    """
+    Состояния диалога редактирования инструкций.
+    """
+    documents = State()
+    guides = State()
+    guide = State()
+    edit_title = State()
+    edit_doc_name = State()
+    edit_content = State()
+    delete_doc = State()
+    delete_guide = State()
+    end = State()
+
+
+class ExcursionCreationSG(StatesGroup):
+    """
+    Состояния диалога создания виртуальных экскурсий.
+    """
+    title = State()
+    description = State()
+    confirm = State()
+    material_name = State()
+    upload_materials = State()
+    material_end = State()
+
+
+class ExcursionViewSG(StatesGroup):
+    """
+    Состояния диалога просмотра виртуальных экскурсий.
+    """
+    list = State()
+    detail = State()
+    material = State()
+
+
+class ExcursionEditSG(StatesGroup):
+    """
+    Состояния диалога редактирования виртуальных экскурсий.
+    """
+    list = State()
+    detail = State()
+    material = State()
+    edit_title = State()
+    edit_description = State()
+    edit_material_name = State()
+    edit_material = State()
+    delete_virtex = State()
+    delete_material = State()
 
 
 class CanteenInfoCreationSG(StatesGroup):
@@ -76,150 +256,23 @@ class CanteenViewSG(StatesGroup):
     info = State()
 
 
-class ExcursionCreationSG(StatesGroup):
-    title = State()
-    description = State()
-    confirm = State()
-    material_name = State()
-    upload_materials = State()
-    material_end = State()
-
-
-class ExcursionViewSG(StatesGroup):
-    list = State()
-    detail = State()
-    material = State()
-
-
-class ExcursionEditSG(StatesGroup):
-    list = State()
-    detail = State()
-    material = State()
-    edit_title = State()
-    edit_description = State()
-    edit_material_name = State()
-    edit_material = State()
-    delete_virtex = State()
-    delete_material = State()
-
-
-class GuideCreationSG(StatesGroup):
-    document = State()
-    title = State()
-    upload_content = State()
-    end = State()
-
-
-class GuideViewSG(StatesGroup):
-    documents = State()
-    guides = State()
-    guide = State()
-    end = State()
-
-
-class GuideEditSG(StatesGroup):
-    documents = State()
-    guides = State()
-    guide = State()
-    edit_title = State()
-    edit_doc_name = State()
-    edit_content = State()
-    delete_doc = State()
-    delete_guide = State()
-    end = State()
-
-
 class FeedbackUserSG(StatesGroup):
+    """
+    Состояния для диалога добавления отзыва
+    """
     text = State()
     attachment = State()
     end = State()
 
 
 class FeedbackAdminSG(StatesGroup):
-    feedback_list = State()
-    feedback_detail = State()
+    """
+    Состояния для диалога просмотра отзывов
+    """
+    list = State()
+    detail = State()
     attachment = State()
     delete = State()
-
-
-class CompanyInfoCreationSG(StatesGroup):
-    """
-    Состояния для диалога создания новой информации о компании.
-    """
-
-    title = State()
-    description = State()
-    file = State()
-    image = State()
-    confirm = State()
-
-
-class ManageCompanyInfoSG(StatesGroup):
-    list = State()
-    company_info_action = State()
-    edit_title = State()
-    edit_description = State()
-    edit_file = State()
-    edit_image = State()
-
-
-class CompanyInfoViewSG(StatesGroup):
-    """
-    Состояния для просмотра организационной структуры.
-    """
-
-    list = State()
-    detail = State()
-
-
-class EventCreationSG(StatesGroup):
-    title = State()
-    description = State()
-    confirm = State()
-
-
-class ManageEventSG(StatesGroup):
-    list = State()
-    event_action = State()
-    edit_title = State()
-    edit_description = State()
-
-
-class EventsViewSG(StatesGroup):
-    """
-    Состояния диалога просмотра мероприятий.
-    """
-
-    list = State()
-    detail = State()
-
-
-class OrgStructureCreationSG(StatesGroup):
-    """
-    Состояния для диалога создания новой организационной структуры.
-    """
-
-    title = State()
-    description = State()
-    file = State()
-    confirm = State()
-
-
-class ManageOrgStructureSG(StatesGroup):
-    list = State()
-    org_structure_action = State()
-    edit_title = State()
-    edit_description = State()
-    edit_file = State()
-
-
-class OrgStructureViewSG(StatesGroup):
-    """
-    Состояния для просмотра организационной структуры.
-    """
-
-    list = State()
-    detail = State()
 
 
 class AddFAQSG(StatesGroup):
