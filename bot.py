@@ -46,6 +46,7 @@ dp = Dispatcher(
 )
 
 dp.include_router(start_router)
+dp.include_router(register_request_router)
 # dp.include_router(login_router)
 # dp.include_router(register_router)
 # dp.include_router(register_request_router)

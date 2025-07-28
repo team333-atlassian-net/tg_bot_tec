@@ -14,10 +14,13 @@ router = Router()
 @router.callback_query(F.data.startswith("approve:"))
 async def approve_request(callback: CallbackQuery):
     """Подтверждение заявки"""
-
     request_id = callback.data.split(":")[1]
     request = await get_request(id=request_id)
     pin = await generate_unique_pin()
+    if not request:
+        await callback.message.answer("❌ Заявка не найдена.")
+        return
+
 
     await update_request_status(request_id=request_id, status="approved")
     user = User(first_name=request.first_name,
@@ -36,7 +39,7 @@ async def approve_request(callback: CallbackQuery):
         text=f"👤 Пользователь <b>{request.last_name} {request.first_name}</b> успешно зарегистрирован.\n"
              f"Ему отправлен ПИН-код: <b>{pin}</b>"
     )
-    await callback.answer("Пользователь добавлен.")
+    await callback.message.edit_reply_markup(reply_markup=None)
 
 
 @router.callback_query(F.data.startswith("reject:"))
@@ -54,4 +57,4 @@ async def reject_request(callback: CallbackQuery):
     await callback.message.answer(
         text=f"Заявка от <b>{request.last_name} {request.first_name}</b> была отклонена."
     )
-    await callback.answer("Заявка отклонена.")
+    await callback.message.edit_reply_markup(reply_markup=None)
