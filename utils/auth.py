@@ -1,13 +1,10 @@
 from dao.auth import get_user, is_admin
-from aiogram.types import Message
+from aiogram.types import Message, User
 
-async def require_auth(message: Message):
-    tg_id = message.from_user.id
+
+async def require_auth(from_user: User):
+    tg_id = from_user.id
     user = await get_user(tg_id=tg_id)
-
-    if not user:
-        await message.answer("Вы не авторизованы. Введите пин-код с помощью /login.\nДля регистрации введите /register")
-        return None
 
     return user
 

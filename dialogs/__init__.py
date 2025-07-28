@@ -1,6 +1,9 @@
 from aiogram_dialog import setup_dialogs
 from aiogram import Dispatcher
 
+from dialogs.start.dialog import dialog as start_dialog
+from dialogs.menu.dialog import dialog as menu_dialog
+
 from dialogs.auth.login.dialog import dialog as login_dialog
 from dialogs.auth.register.dialog import dialog as register_dialog
 from dialogs.auth.add_user.dialog import dialog as add_user_dialog
@@ -38,32 +41,35 @@ from dialogs.feedback.user.dialog import dialog as user_feedback_dialog
 from dialogs.feedback.admin.dialog import dialog as admin_feedback_dialog
 
 
-def register_all_dialogs(dp: Dispatcher):
-    setup_dialogs(dp)
-    dp.include_router(login_dialog)
-    dp.include_router(register_dialog)
-    dp.include_router(add_user_dialog)
-    dp.include_router(view_event_dialog)
-    dp.include_router(manage_event_dialog)
-    dp.include_router(create_event_dialog)
-    dp.include_router(create_org_structure_dialog)
-    dp.include_router(manage_org_structure_dialog)
-    dp.include_router(org_structure_dialog)
-    dp.include_router(create_company_info_dialog)
-    dp.include_router(create_virtex_dialog)
-    dp.include_router(virtex_dialog)
-    dp.include_router(edit_virtex_dialog)
-    dp.include_router(company_info_dialog)
-    dp.include_router(manage_company_info_dialog)
-    dp.include_router(add_faq_dialog)
-    dp.include_router(faq_dialog)
-    dp.include_router(faq_search_dialog)
-    dp.include_router(manage_faq_dialog)
-    dp.include_router(add_canteen_info_dialog)
-    dp.include_router(canteen_dialog)
-    dp.include_router(manage_canteen_dialog)
-    dp.include_router(manage_guides_dialog)
-    dp.include_router(add_guide_dialog)
-    dp.include_router(guides_dialog)
-    dp.include_router(admin_feedback_dialog)
-    dp.include_router(user_feedback_dialog)
+def get_dialogs():
+    return [
+        start_dialog,
+        menu_dialog,
+        login_dialog,
+        register_dialog,
+        add_user_dialog,
+        view_event_dialog,
+        manage_event_dialog,
+        create_event_dialog,
+        create_org_structure_dialog,
+        manage_org_structure_dialog,
+        org_structure_dialog,
+        create_company_info_dialog,
+        create_virtex_dialog,
+        virtex_dialog,
+        edit_virtex_dialog,
+        company_info_dialog,
+        manage_company_info_dialog,
+        add_faq_dialog,
+        faq_dialog,
+        faq_search_dialog,
+        manage_faq_dialog,
+        add_canteen_info_dialog,
+        canteen_dialog,
+        manage_canteen_dialog,
+        manage_guides_dialog,
+        add_guide_dialog,
+        guides_dialog,
+        admin_feedback_dialog,
+        user_feedback_dialog,
+    ]
