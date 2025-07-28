@@ -42,7 +42,7 @@ feedback_attachment_window = Window(
 
 feedback_end_window = Window(
     Format("Ваш отзыв отправлен! Спасибо за обратную связь ✅"),
-    Row(Cancel(Const("❌ Отмена")), Button(Const("На главную"), id="finish")),
+    Cancel(Const("⬅️ К меню")),
     state=FeedbackUserSG.end,
 )
 

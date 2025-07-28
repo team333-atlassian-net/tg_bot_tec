@@ -26,7 +26,7 @@ async def start_manage_guides(message, dialog_manager: DialogManager):
     if not user:
         return
     await dialog_manager.start(
-        FeedbackAdminSG.feedback_list,
+        FeedbackAdminSG.list,
         mode=StartMode.RESET_STACK,
         data={"unread_flag": True},
     )

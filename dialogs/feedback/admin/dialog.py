@@ -54,7 +54,7 @@ feedback_list_window = Window(
         when="all",
     ),
     Cancel(Const("❌ Отмена")),
-    state=FeedbackAdminSG.feedback_list,
+    state=FeedbackAdminSG.list,
     getter=feedbacks_getter,
 )
 
@@ -86,7 +86,7 @@ feedback_detail_window = Window(
         Back(Const("⬅️ Назад")),
         Cancel(Const("❌ Закрыть")),
     ),
-    state=FeedbackAdminSG.feedback_detail,
+    state=FeedbackAdminSG.detail,
     getter=feedback_detail_getter,
 )
 
