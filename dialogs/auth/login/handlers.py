@@ -13,10 +13,17 @@ async def on_pin_entered(
 ):
     """Проверяет пин код и авторизует пользователя"""
     tg_id = message.from_user.id
+    # Проверка: пользователь уже авторизован
+    existing = await get_user(tg_id=tg_id)
+    if existing:
+        await message.answer("Вы уже авторизованы. Сначала выйите из системы.")
+        await dialog_manager.done()
+        return
+    
     user = await get_user(pin_code=value.get_value())
 
     if not user:
-        await message.answer("ПИН-код не найден. Повторите команду /login.")
+        await message.answer("ПИН-код не найден. Повторите авторизацию.")
         await dialog_manager.done()
         return
 

@@ -2,6 +2,7 @@ from aiogram_dialog import Window, Dialog, StartMode, LaunchMode
 from aiogram_dialog.widgets.kbd import Start, Next, Select, Button, Group, Back, SwitchTo
 from aiogram_dialog.widgets.text import Const, Format
 
+from dialogs.auth.logout.handlers import on_logout
 from dialogs.menu.getters import *
 from dialogs.menu.handlers import *
 from states import *
@@ -64,7 +65,7 @@ auth_module_window = Window(
           id="start_register_dialog",
           state=RegisterDialogSG.first,
           mode=StartMode.NORMAL),
-    Button(Const("Выход"), id="start_logout"),
+    Button(Const("Выход"), id="start_logout", on_click=on_logout),
     Start(Const("Добавить пользователя(ей)"),
           id="start_add_user",
           state=AddUserSG.method,
