@@ -1,6 +1,81 @@
 from aiogram.fsm.state import State, StatesGroup
 
 
+class AddUserSG(StatesGroup):
+    method = State()
+    first_name = State()
+    last_name = State()
+    middle_name = State()
+    confirm = State()
+    upload_excel = State()
+
+
+class AuthDialogSG(StatesGroup):
+    """Класс состояния для авторизации"""
+
+    enter_pin = State()
+
+
+class RegisterDialogSG(StatesGroup):
+    """
+    Состояния диалога регистрации нового пользователя.
+    """
+
+    first = State()
+    last = State()
+    middle = State()
+    confirm = State()
+
+
+class CanteenInfoCreationSG(StatesGroup):
+    """Состояния для диалога добавления информации о столовой и меню."""
+
+    choice = State()
+
+    # Состояния для столовой
+    start_time = State()
+    end_time = State()
+    description = State()
+    confirm_canteen = State()
+
+    # Состояния для меню
+    menu_date = State()
+    menu_text = State()
+    menu_file = State()
+    confirm_menu = State()
+
+
+class ManageCanteenSG(StatesGroup):
+    """
+    Состояния для управления меню и информацией о столовой.
+    """
+
+    choice = State()
+    select_menu = State()
+    menu_edit_action = State()
+    edit_menu_text = State()
+    edit_menu_file = State()
+    confirm_menu_edit = State()
+    confirm_info = State()
+
+    edit_canteen_info = State()
+    canteen_info_action = State()
+    edit_info = State()
+    edit_description = State()
+    edit_start_time = State()
+    edit_end_time = State()
+
+
+class CanteenViewSG(StatesGroup):
+    """Состояния диалога просмотра столовой и меню"""
+
+    start = State()
+    menu_list = State()
+    menu_detail = State()
+    calendar = State()
+    info = State()
+
+
 class ExcursionCreationSG(StatesGroup):
     title = State()
     description = State()
@@ -65,3 +140,130 @@ class FeedbackAdminSG(StatesGroup):
     feedback_detail = State()
     attachment = State()
     delete = State()
+
+
+class CompanyInfoCreationSG(StatesGroup):
+    """
+    Состояния для диалога создания новой информации о компании.
+    """
+
+    title = State()
+    description = State()
+    file = State()
+    image = State()
+    confirm = State()
+
+
+class ManageCompanyInfoSG(StatesGroup):
+    list = State()
+    company_info_action = State()
+    edit_title = State()
+    edit_description = State()
+    edit_file = State()
+    edit_image = State()
+
+
+class CompanyInfoViewSG(StatesGroup):
+    """
+    Состояния для просмотра организационной структуры.
+    """
+
+    list = State()
+    detail = State()
+
+
+class EventCreationSG(StatesGroup):
+    title = State()
+    description = State()
+    confirm = State()
+
+
+class ManageEventSG(StatesGroup):
+    list = State()
+    event_action = State()
+    edit_title = State()
+    edit_description = State()
+
+
+class EventsViewSG(StatesGroup):
+    """
+    Состояния диалога просмотра мероприятий.
+    """
+
+    list = State()
+    detail = State()
+
+
+class OrgStructureCreationSG(StatesGroup):
+    """
+    Состояния для диалога создания новой организационной структуры.
+    """
+
+    title = State()
+    description = State()
+    file = State()
+    confirm = State()
+
+
+class ManageOrgStructureSG(StatesGroup):
+    list = State()
+    org_structure_action = State()
+    edit_title = State()
+    edit_description = State()
+    edit_file = State()
+
+
+class OrgStructureViewSG(StatesGroup):
+    """
+    Состояния для просмотра организационной структуры.
+    """
+
+    list = State()
+    detail = State()
+
+
+class AddFAQSG(StatesGroup):
+    """
+    Состояния для диалога добавления FAQ
+    """
+
+    method = State()
+    question = State()
+    answer = State()
+    category = State()
+    keywords = State()
+    confirm = State()
+    upload_excel = State()
+
+
+class ManageFAQSQ(StatesGroup):
+    """Состояния для управления FAQ"""
+
+    list = State()
+    faq_action = State()
+    edit_question = State()
+    edit_answer = State()
+    edit_category = State()
+    edit_keywords = State()
+
+
+class FAQSearchSG(StatesGroup):
+    """
+    Состояния для диалога поиска FAQ
+    """
+
+    search_input = State()
+    search_results = State()
+    detail = State()
+
+
+class FAQViewSG(StatesGroup):
+    """
+    Состояния для диалога FAQ
+    """
+
+    menu = State()
+    list_all = State()
+    category_select = State()
+    category_questions = State()
+    detail = State()

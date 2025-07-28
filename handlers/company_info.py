@@ -5,14 +5,13 @@ from aiogram.filters import Command
 from aiogram_dialog import DialogManager, StartMode
 from aiogram.types import Message
 
-from dialogs.company_info.add_company_info import CompanyInfoCreationSG
-from dialogs.company_info.manage_view_company import ManageCompanyInfoSG
-from dialogs.company_info.view_company_info import CompanyInfoViewSG
+from states import CompanyInfoCreationSG, ManageCompanyInfoSG, CompanyInfoViewSG
 from utils.auth import require_admin, require_auth
 
 logger = logging.getLogger(__name__)
 
 router = Router()
+
 
 @router.message(Command("company_info"))
 async def show_virtual_excursions(message: Message, dialog_manager: DialogManager):

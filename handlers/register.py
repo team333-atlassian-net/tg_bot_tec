@@ -3,9 +3,10 @@ from aiogram.filters import Command
 from aiogram.types import Message
 from aiogram_dialog import DialogManager, StartMode
 
-from dialogs.auth.register import RegisterDialogSG
+from states import RegisterDialogSG
 
 router = Router()
+
 
 @router.message(Command("register"))
 async def start_auth_dialog(message: Message, dialog_manager: DialogManager):

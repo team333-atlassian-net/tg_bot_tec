@@ -5,14 +5,13 @@ from aiogram.filters import Command
 from aiogram_dialog import DialogManager, StartMode
 from aiogram.types import Message
 
-from dialogs.org_structure.add_org_structure import OrgStructureCreationSG
-from dialogs.org_structure.manage_org_structure import ManageOrgStructureSG
-from dialogs.org_structure.view_org_structure import OrgStructureViewSG
+from states import OrgStructureCreationSG, ManageOrgStructureSG, OrgStructureViewSG
 from utils.auth import require_admin, require_auth
 
 logger = logging.getLogger(__name__)
 
 router = Router()
+
 
 @router.message(Command("org_structures"))
 async def show_virtual_excursions(message: Message, dialog_manager: DialogManager):
@@ -20,7 +19,9 @@ async def show_virtual_excursions(message: Message, dialog_manager: DialogManage
     if not user:
         return
     await dialog_manager.reset_stack()
-    logger.info("Пользователь запросил информацию об организационной структуре (/org_structures)")
+    logger.info(
+        "Пользователь запросил информацию об организационной структуре (/org_structures)"
+    )
     await dialog_manager.start(OrgStructureViewSG.list, mode=StartMode.RESET_STACK)
 
 

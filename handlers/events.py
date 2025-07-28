@@ -4,14 +4,13 @@ from aiogram.filters import Command
 from aiogram_dialog import DialogManager, StartMode
 from aiogram.types import Message
 
-from dialogs.events.add_event import EventCreationSG
-from dialogs.events.view_events import EventsViewSG
-from dialogs.events.manage_events import ManageEventSG
+from states import EventCreationSG, ManageEventSG, EventsViewSG
 from utils.auth import require_admin, require_auth
 
 logger = logging.getLogger(__name__)
 
 router = Router()
+
 
 @router.message(Command("events"))
 async def show_virtual_excursions(message: Message, dialog_manager: DialogManager):

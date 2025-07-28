@@ -1,34 +1,34 @@
 from aiogram_dialog import setup_dialogs
 from aiogram import Dispatcher
 
-from dialogs.auth.login import login_dialog
-from dialogs.auth.register import register_dialog
-from dialogs.auth.add_user import add_user_dialog
+from dialogs.auth.login.dialog import dialog as login_dialog
+from dialogs.auth.register.dialog import dialog as register_dialog
+from dialogs.auth.add_user.dialog import dialog as add_user_dialog
 
 from dialogs.virtual_excursions.create.dialog import dialog as create_virtex_dialog
 from dialogs.virtual_excursions.view.dialog import dialog as virtex_dialog
 from dialogs.virtual_excursions.edit.dialog import dialog as edit_virtex_dialog
 
-from dialogs.events.view_events import view_event_dialog
-from dialogs.events.manage_events import manage_event_dialog
-from dialogs.events.add_event import create_event_dialog
+from dialogs.events.view.dialog import dialog as view_event_dialog
+from dialogs.events.edit.dialog import dialog as manage_event_dialog
+from dialogs.events.create.dialog import dialog as create_event_dialog
 
-from dialogs.org_structure.add_org_structure import create_org_structure_dialog
-from dialogs.org_structure.view_org_structure import org_structure_dialog
-from dialogs.org_structure.manage_org_structure import manage_org_structure_dialog
+from dialogs.org_structure.create.dialog import dialog as create_org_structure_dialog
+from dialogs.org_structure.view.dialog import dialog as org_structure_dialog
+from dialogs.org_structure.edit.dialog import dialog as manage_org_structure_dialog
 
-from dialogs.company_info.add_company_info import create_company_info_dialog
-from dialogs.company_info.view_company_info import company_info_dialog
-from dialogs.company_info.manage_view_company import manage_company_info_dialog
+from dialogs.company_info.create.dialog import dialog as create_company_info_dialog
+from dialogs.company_info.view.dialog import dialog as company_info_dialog
+from dialogs.company_info.edit.dialog import dialog as manage_company_info_dialog
 
-from dialogs.faq.add_faq import add_faq_dialog
-from dialogs.faq.view_faq import faq_dialog
-from dialogs.faq.search_faq import faq_search_dialog
-from dialogs.faq.manage_faq import manage_faq_dialog
+from dialogs.faq.create.dialog import dialog as add_faq_dialog
+from dialogs.faq.view.dialog import dialog as faq_dialog
+from dialogs.faq.search.dialog import dialog as faq_search_dialog
+from dialogs.faq.edit.dialog import dialog as manage_faq_dialog
 
-from dialogs.canteen.add_canteen_info import add_canteen_info_dialog
-from dialogs.canteen.view_canteen_info import canteen_dialog
-from dialogs.canteen.manage_canteen_info import manage_canteen_dialog
+from dialogs.canteen.create.dialog import dialog as add_canteen_info_dialog
+from dialogs.canteen.view.dialog import dialog as canteen_dialog
+from dialogs.canteen.edit.dialog import dialog as manage_canteen_dialog
 
 from dialogs.guides.view.dialog import dialog as guides_dialog
 from dialogs.guides.create.dialog import dialog as add_guide_dialog

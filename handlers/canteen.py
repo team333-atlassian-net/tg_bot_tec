@@ -4,14 +4,14 @@ from aiogram.filters import Command
 from aiogram_dialog import DialogManager, StartMode
 from aiogram.types import Message
 
-from dialogs.canteen.add_canteen_info import CanteenInfoCreationSG
-from dialogs.canteen.manage_canteen_info import ManageCanteenSG
-from dialogs.canteen.view_canteen_info import CanteenViewSG
 from utils.auth import require_admin, require_auth
+
+from states import CanteenInfoCreationSG, ManageCanteenSG, CanteenViewSG
 
 logger = logging.getLogger(__name__)
 
 router = Router()
+
 
 @router.message(Command("canteen"))
 async def show_canteen_info(message: Message, dialog_manager: DialogManager):
