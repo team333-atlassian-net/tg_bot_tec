@@ -2,7 +2,7 @@ from aiogram_dialog import setup_dialogs
 from aiogram import Dispatcher
 
 from dialogs.auth.login.dialog import dialog as login_dialog
-from dialogs.auth.register import register_dialog
+from dialogs.auth.register.dialog import dialog as register_dialog
 from dialogs.auth.add_user.dialog import dialog as add_user_dialog
 
 from dialogs.virtual_excursions.create.dialog import dialog as create_virtex_dialog

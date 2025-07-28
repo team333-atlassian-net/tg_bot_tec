@@ -16,6 +16,17 @@ class AuthDialogSG(StatesGroup):
     enter_pin = State()
 
 
+class RegisterDialogSG(StatesGroup):
+    """
+    Состояния диалога регистрации нового пользователя.
+    """
+
+    first = State()
+    last = State()
+    middle = State()
+    confirm = State()
+
+
 class ExcursionCreationSG(StatesGroup):
     title = State()
     description = State()
