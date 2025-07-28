@@ -9,18 +9,9 @@ from aiogram_dialog.widgets.input import TextInput, MessageInput
 from aiogram_dialog.widgets.kbd import Back, Cancel, Row, Button
 
 from dao.company_info import add_company_info
+from states import CompanyInfoCreationSG
 
 logger = logging.getLogger(__name__)
-
-class CompanyInfoCreationSG(StatesGroup):
-    """
-    Состояния для диалога создания новой информации о компании.
-    """
-    title = State()
-    description = State()
-    file = State()
-    image = State()
-    confirm = State()
 
 
 async def on_title_input(message: Message, widget: TextInput, dialog: DialogManager):
@@ -32,7 +23,9 @@ async def on_title_input(message: Message, widget: TextInput, dialog: DialogMana
     await dialog.switch_to(CompanyInfoCreationSG.description)
 
 
-async def on_description_input(message: Message, widget: TextInput, dialog: DialogManager):
+async def on_description_input(
+    message: Message, widget: TextInput, dialog: DialogManager
+):
     """
     Обрабатывает ввод описания организационной структуры.
     Сохраняет описание и переходит к загрузке файла.
@@ -57,6 +50,7 @@ async def on_file_input(message: Message, widget, dialog: DialogManager):
         await dialog.switch_to(CompanyInfoCreationSG.image)
     else:
         await message.answer("❌ Пожалуйста, отправьте файл.")
+
 
 async def on_image_input(message: Message, widget, dialog: DialogManager):
     """
@@ -95,6 +89,7 @@ async def on_file_skip(callback: CallbackQuery, button, dialog: DialogManager):
     dialog.dialog_data["file_id"] = None
     await dialog.switch_to(CompanyInfoCreationSG.image)
 
+
 async def on_image_skip(callback: CallbackQuery, button, dialog: DialogManager):
     """
     Обрабатывает нажатие кнопки "Пропустить" на этапе загрузки фото.
@@ -104,31 +99,9 @@ async def on_image_skip(callback: CallbackQuery, button, dialog: DialogManager):
     await dialog.switch_to(CompanyInfoCreationSG.confirm)
 
 
-async def get_confirm_data(dialog_manager: DialogManager, **kwargs):
-    """
-    Подготавливает данные для отображения в окне подтверждения.
-    Возвращает название, описание (или '-'), имя файла (или '-').
-    """
-    title = dialog_manager.dialog_data.get("title")
-    description = dialog_manager.dialog_data.get("description")
-    file_name = dialog_manager.dialog_data.get("file_name")
-    image_name = dialog_manager.dialog_data.get("image_name")
-
-    file_text = file_name if file_name else "-"
-    image_text = image_name if image_name else "-"
-    description_text = description if description else "-"
-
-    return {
-        "dialog_data": {
-            "title": title,
-            "description": description_text,
-            "file_text": file_text,
-            "image_text": image_text
-        }
-    }
-
-
-async def on_confirm_press(callback: CallbackQuery, widget, dialog_manager: DialogManager, **kwargs):
+async def on_confirm_press(
+    callback: CallbackQuery, widget, dialog_manager: DialogManager, **kwargs
+):
     """
     Обрабатывает подтверждение создания новой оргструктуры.
     Сохраняет данные в БД и завершает диалог.
@@ -146,72 +119,3 @@ async def on_confirm_press(callback: CallbackQuery, widget, dialog_manager: Dial
     await callback.message.answer("✅ Информация о компании добавлена")
     logger.info("Администратор добавил новую информацию о компании (/add_company_info)")
     await dialog_manager.done()
-
-# --- Окна ---
-
-title_window = Window(
-    Const("Введите заголовок:"),
-    MessageInput(on_title_input),
-    Cancel(Const("❌ Отмена")),
-    state=CompanyInfoCreationSG.title,
-)
-
-description_window = Window(
-    Const("Введите описание (необязательно):"),
-    MessageInput(on_description_input),
-    Row(
-        Back(Const("⬅️ Назад")),
-        Button(Const("➡️ Пропустить"), id="skip_desc", on_click=on_description_skip),
-        Cancel(Const("❌ Отмена")),
-    ),
-    state=CompanyInfoCreationSG.description,
-)
-
-file_window = Window(
-    Const("Отправьте файл (необязательно):"),
-    MessageInput(on_file_input),
-    Row(
-        Back(Const("⬅️ Назад")),
-        Button(Const("➡️ Пропустить"), id="skip_file", on_click=on_file_skip),
-        Cancel(Const("❌ Отмена")),
-    ),
-    state=CompanyInfoCreationSG.file,
-)
-
-
-image_window = Window(
-    Const("Отправьте изображение (необязательно):"),
-    MessageInput(on_image_input),
-    Row(
-        Back(Const("⬅️ Назад")),
-        Button(Const("➡️ Пропустить"), id="skip_image", on_click=on_image_skip),
-        Cancel(Const("❌ Отмена")),
-    ),
-    state=CompanyInfoCreationSG.image,
-)
-
-
-confirm_window = Window(
-    Format(
-        "Подтвердите создание информации о компании:\n\n"
-        "Название: {dialog_data[title]}\n"
-        "Описание: {dialog_data[description]}\n"
-        "Файл: {dialog_data[file_text]}\n"
-        "Фото: {dialog_data[image_text]}"
-    ),
-    Row(
-        Button(Const("✅ Сохранить"), id="confirm", on_click=on_confirm_press),
-        Back(Const("⬅️ Назад")),
-        Cancel(Const("❌ Отмена")),
-    ),
-    state=CompanyInfoCreationSG.confirm,
-    getter=get_confirm_data,
-)
-
-create_company_info_dialog = Dialog(
-    title_window,
-    description_window,
-    file_window,
-    image_window,
-    confirm_window,
-)

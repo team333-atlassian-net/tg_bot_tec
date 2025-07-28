@@ -17,9 +17,9 @@ from dialogs.org_structure.add_org_structure import create_org_structure_dialog
 from dialogs.org_structure.view_org_structure import org_structure_dialog
 from dialogs.org_structure.manage_org_structure import manage_org_structure_dialog
 
-from dialogs.company_info.add_company_info import create_company_info_dialog
-from dialogs.company_info.view_company_info import company_info_dialog
-from dialogs.company_info.manage_view_company import manage_company_info_dialog
+from dialogs.company_info.create.dialog import dialog as create_company_info_dialog
+from dialogs.company_info.view.dialog import dialog as company_info_dialog
+from dialogs.company_info.edit.dialog import dialog as manage_company_info_dialog
 
 from dialogs.faq.add_faq import add_faq_dialog
 from dialogs.faq.view_faq import faq_dialog

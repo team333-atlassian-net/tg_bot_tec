@@ -140,3 +140,33 @@ class FeedbackAdminSG(StatesGroup):
     feedback_detail = State()
     attachment = State()
     delete = State()
+
+
+class CompanyInfoCreationSG(StatesGroup):
+    """
+    Состояния для диалога создания новой информации о компании.
+    """
+
+    title = State()
+    description = State()
+    file = State()
+    image = State()
+    confirm = State()
+
+
+class ManageCompanyInfoSG(StatesGroup):
+    list = State()
+    company_info_action = State()
+    edit_title = State()
+    edit_description = State()
+    edit_file = State()
+    edit_image = State()
+
+
+class CompanyInfoViewSG(StatesGroup):
+    """
+    Состояния для просмотра организационной структуры.
+    """
+
+    list = State()
+    detail = State()
