@@ -28,7 +28,6 @@ async def on_attachment_upload(
     file_id = file.file_id
     feedback_id = dialog.dialog_data["feedback_id"]
     await add_feedback_attachment(feedback_id=feedback_id, file_id=file_id)
-    await dialog.switch_to(FeedbackUserSG.end)
 
 
 async def on_wrong_type_attachment_upload(
