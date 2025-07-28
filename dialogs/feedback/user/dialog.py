@@ -44,10 +44,9 @@ feedback_end_window = Window(
     Format("Ваш отзыв отправлен! Спасибо за обратную связь ✅"),
     Row(
         Cancel(Const("❌ Отмена")),
-        Button(Const("На главную"), id="finish"),
+        Button(Const("На главную"), id="finish", on_click=lambda c, w, d, **k: d.switch_to(FeedbackUserSG.text)),
     ),
     state=FeedbackUserSG.end,
 )
-
 
 dialog = Dialog(feedback_text_window, feedback_attachment_window, feedback_end_window)

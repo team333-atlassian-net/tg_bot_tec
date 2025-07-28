@@ -2,8 +2,8 @@ import asyncio
 from datetime import date, time
 from db import async_session_maker
 from sqlalchemy import select, func
-from models import FAQ, Canteen, CanteenMenu, CompanyInfo, ExcursionMaterial, FAQKeyWords, Event, Guide, OrganizationalStructure, VirtualExcursion
-# from models import Feedback, FeedbackAttachments
+from models import FAQ, Canteen, CanteenMenu, CompanyInfo, ExcursionMaterial, FAQKeyWords, Event, Guide, OrganizationalStructure, User, VirtualExcursion
+from models import Feedback, FeedbackAttachments
 
 
 ### Данные без фотографий\файлов
@@ -177,42 +177,39 @@ async def add_company_info():
         print("Информация о компании добавлена")
 
 
-# async def add_feedback_data():
-#     async with async_session_maker() as session:
-        # count = await session.scalar(select(func.count()).select_from(Feedback))
+async def add_feedback_data():
+    async with async_session_maker() as session:
+        count = await session.scalar(select(func.count()).select_from(Feedback))
 
-        # if count > 0:
-        #     print("Экскурсии уже заполнены — пропуск")
-        #     return
-#         user_id = await session.scalar(
-#             select(User).where(User.pin_code == "12345")
-#         )
+        if count > 0:
+            print("Отзывы уже заполнены — пропуск")
+            return
+        user = await session.scalar(
+            select(User).where(User.pin_code == "12345")
+        )
 
-#         feedback1 = Feedback(
-#             user_id=user_id,
-#             text="Бот работает отлично, но хотелось бы больше интерактива.",
-#             is_read=False
-#         )
-#         await session.flush()
+        feedback1 = Feedback(
+            user_id=user.id,
+            text="Бот работает отлично, но хотелось бы больше интерактива.",
+            is_read=False
+        )
+        session.add(feedback1)
+        await session.flush()
 
-#         attachments1 = [
-#             FeedbackAttachments(
-#                 feedback_id=feedback1.id,
-#                 file_id=None
-#             )
-#         ]
-
-#         # Отзыв без вложений
-#         feedback2 = Feedback(
-#             user_id=user_id,
-#             text="Спасибо за бота! Очень полезная штука.",
-#             is_read=True
-#         )
-
-#         session.add(feedback1)
-#         session.add(feedback2)
-#         await session.commit()
-#         print("Отзывы добавлены")
+        attachment1 = FeedbackAttachments(
+                feedback_id=feedback1.id,
+                file_id="AgACAgIAAxkBAAINJmiG-6o9UVCd6-W8-YkvS5bm_he2AALt-DEb9sU5SGIN9uYFAaRpAQADAgADcwADNgQ"
+            )
+        session.add(attachment1)
+        # Отзыв без вложений
+        feedback2 = Feedback(
+            user_id=user.id,
+            text="Спасибо за бота! Очень полезная штука.",
+            is_read=True
+        )
+        session.add(feedback2)
+        await session.commit()
+        print("Отзывы добавлены")
 
 async def add_virtex_data():
     async with async_session_maker() as session:
@@ -319,6 +316,6 @@ if __name__ == "__main__":
         await add_virtex_data()
         await add_org_structure()
         await add_guides_data()
-        # await add_feedback_data()
+        await add_feedback_data()
 
     asyncio.run(main())

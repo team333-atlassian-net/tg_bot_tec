@@ -53,7 +53,10 @@ guides_list_window = Window(
             item_id_getter=lambda item: item[0],
             items="guides",
             on_click=on_guide_select,
+            
         ),
+        width=1,
+        height=5,
         id="scroll_guides",
     ),
     Row(Back(Const("⬅️ Назад")), Cancel(Const("❌ Закрыть"))),

@@ -66,6 +66,7 @@ async def on_edit_guide_content(
     file_id = file.file_id if file else None
     await update_guide_content(guide_id=guide_id, new_file_id=file_id, new_text=text)
     await message.answer("✅ Инструкция успешно обновлена!")
+    await dialog.switch_to(GuideEditSG.guides)
 
 
 async def on_press_add_guide(callback, button: Button, dialog: DialogManager):
