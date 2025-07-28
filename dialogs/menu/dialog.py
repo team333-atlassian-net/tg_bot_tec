@@ -56,15 +56,10 @@ menu_window = Window(
 # Auth / Регистрация / Добавление пользователя
 auth_module_window = Window(
     Const("Выберите действие:"),
-    Start(Const("Авторизация"),
-          id="start_auth_dialog",
-          state=AuthDialogSG.enter_pin,
+    Start(Const("Выйти"),
+          id="start_logout",
+          state=LogoutSG.logout,
           mode=StartMode.NORMAL),
-    Start(Const("Регистрация"),
-          id="start_register_dialog",
-          state=RegisterDialogSG.first,
-          mode=StartMode.NORMAL),
-    Button(Const("Выход"), id="start_logout"),
     Start(Const("Добавить пользователя(ей)"),
           id="start_add_user",
           state=AddUserSG.method,

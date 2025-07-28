@@ -33,6 +33,12 @@ class AuthDialogSG(StatesGroup):
     enter_pin = State()
 
 
+class LogoutSG(StatesGroup):
+    """Класс состояния для logout"""
+
+    logout = State()
+
+
 class RegisterDialogSG(StatesGroup):
     """
     Состояния диалога регистрации нового пользователя.

@@ -9,14 +9,23 @@ logger = logging.getLogger(__name__)
 
 
 async def on_pin_entered(
-    message: Message, value: str, dialog_manager: DialogManager, widget
+        message: Message, value: str, dialog_manager: DialogManager, widget
 ):
     """Проверяет пин код и авторизует пользователя"""
     tg_id = message.from_user.id
+
+    # Проверка: пользователь уже авторизован
+    existing = await get_user(tg_id=tg_id)
+
+    if existing:
+        await message.answer("Вы уже авторизованы. Сначала выйдете из системы.")
+        await dialog_manager.done()
+        return
+
     user = await get_user(pin_code=value.get_value())
 
     if not user:
-        await message.answer("ПИН-код не найден. Повторите команду /login.")
+        await message.answer("ПИН-код не найден. Повторите авторизацию")
         await dialog_manager.done()
         return
 

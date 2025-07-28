@@ -7,6 +7,7 @@ from dialogs.menu.dialog import dialog as menu_dialog
 from dialogs.auth.login.dialog import dialog as login_dialog
 from dialogs.auth.register.dialog import dialog as register_dialog
 from dialogs.auth.add_user.dialog import dialog as add_user_dialog
+from dialogs.auth.logout.dialog import dialog as logout_dialog
 
 from dialogs.virtual_excursions.create.dialog import dialog as create_virtex_dialog
 from dialogs.virtual_excursions.view.dialog import dialog as virtex_dialog
@@ -46,6 +47,7 @@ def get_dialogs():
         start_dialog,
         menu_dialog,
         login_dialog,
+        logout_dialog,
         register_dialog,
         add_user_dialog,
         view_event_dialog,
