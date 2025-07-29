@@ -36,7 +36,7 @@ async def approve_request(callback: CallbackQuery):
         text=f"👤 Пользователь <b>{request.last_name} {request.first_name}</b> успешно зарегистрирован.\n"
              f"Ему отправлен ПИН-код: <b>{pin}</b>"
     )
-    await callback.answer("Пользователь добавлен.")
+    await callback.message.edit_reply_markup(reply_markup=None)
 
 
 @router.callback_query(F.data.startswith("reject:"))
@@ -54,4 +54,4 @@ async def reject_request(callback: CallbackQuery):
     await callback.message.answer(
         text=f"Заявка от <b>{request.last_name} {request.first_name}</b> была отклонена."
     )
-    await callback.answer("Заявка отклонена.")
+    await callback.message.edit_reply_markup(reply_markup=None)

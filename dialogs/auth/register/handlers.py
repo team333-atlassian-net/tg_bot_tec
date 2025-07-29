@@ -64,17 +64,27 @@ async def on_confirm(
     admins = await get_users(admin_rule=True)
     request_id = request.id
 
-    for admin in admins:
+    valid_admins = [admin for admin in admins if admin.tg_id]
+
+    if not valid_admins:
+        await callback.message.answer(
+            "К сожалению, сейчас нет доступных администраторов для обработки вашей заявки. "
+            "Пожалуйста, попробуйте отправить заявку позже."
+        )
+        await dialog_manager.done()
+        return
+
+    for admin in valid_admins:
         kb = InlineKeyboardMarkup(
             inline_keyboard=[
                 [
                     InlineKeyboardButton(
-                        text="✅ Принять", callback_data=f"approve:{request_id}"
+                        text="✅ Принять", callback_data=f"approve:{request.id}"
                     )
                 ],
                 [
                     InlineKeyboardButton(
-                        text="❌ Отклонить", callback_data=f"reject:{request_id}"
+                        text="❌ Отклонить", callback_data=f"reject:{request.id}"
                     )
                 ],
             ]
@@ -87,6 +97,7 @@ async def on_confirm(
             ),
             reply_markup=kb,
         )
+
 
     await callback.message.answer(
         "📨 Заявка отправлена. Ожидайте одобрения администратора."
